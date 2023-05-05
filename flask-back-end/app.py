@@ -1,0 +1,34 @@
+from flask import Flask
+from flask_restful import Api
+from flask_migrate import Migrate
+from main.controllers.welcome import HelloWorld
+from main.controllers.user import GetAllUser, GetUser, PostUser, UpdateUser, DeleteUser
+from main.models._db import db
+from main.schemas._ma import ma
+from main.models.user import User
+
+
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:password@localhost:3306/ecommerce'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+api = Api(app, prefix='/api')
+db.init_app(app)
+ma.init_app(app)
+migrate = Migrate(app, db)
+
+# api
+api.add_resource(HelloWorld, '/')
+# user api
+api.add_resource(GetAllUser, '/users')
+api.add_resource(GetUser, '/users/<int:id>')
+api.add_resource(PostUser, '/users')
+api.add_resource(UpdateUser, '/users/<int:id>')
+api.add_resource(DeleteUser, '/users/<int:id>')
+
+
+with app.app_context():
+    db.create_all()
+
+if __name__ == '__main__':
+    app.run(debug=True)
