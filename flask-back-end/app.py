@@ -5,7 +5,6 @@ from main.controllers.welcome import HelloWorld
 from main.controllers.user import GetAllUser, GetUser, PostUser, UpdateUser, DeleteUser
 from main.models._db import db
 from main.schemas._ma import ma
-from main.models.user import User
 
 
 app = Flask(__name__)
