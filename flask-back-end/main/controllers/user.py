@@ -12,7 +12,7 @@ class GetUser(Resource):
     def get(self, id):
         return service.get(user_id=id)
 
-class PostUser(Resource):
+class CreateUser(Resource):
     def post(self):
         return service.create(data=request.json)
 
