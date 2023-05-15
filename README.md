@@ -6,7 +6,7 @@ db-e-commerce-system for 2023 NCCU DBMS
 * MySQL
 ## MySQL
 * 建立 database: ecommerce
-* 在 */flask-back-end/app.py*下修改 `'mysql+pymysql://<user>:<password>@localhost:3306/ecommerce'`
+* 在 *./flask-back-end/app.py*下修改 `'mysql+pymysql://<user>:<password>@localhost:3306/ecommerce'`
 ## Flask
 * 進到 *./flask-back-end* 下 `cd flask-back-end` 
 * 建議使用 virtualenv 建立虛擬環境
