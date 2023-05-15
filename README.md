@@ -1,6 +1,7 @@
 # db-e-commerce-system
 db-e-commerce-system for 2023 NCCU DBMS
 ## Prerequisites
+* python 3.8.8
 ## MySQL
 * http://localhost:3306/
 * database: ecommerce
