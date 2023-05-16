@@ -15,7 +15,7 @@ const routes: Array<RouteRecordRaw> = [
     name: 'Profile',
     component: () => import(/* webpackChunkName: "profile" */ '../views/Profile.vue'),
     meta: {
-      layout: 'Dashboard',
+      layout: 'Default',
     },
   },
   {
@@ -32,6 +32,14 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('../views/SignIn.vue'),
     meta: {
       layout: 'Default',
+    }
+  },
+  {
+    path: '/products',
+    name: 'Proudct',
+    component: () => import('../views/Products.vue'),
+    meta: {
+      layout: 'Default'
     }
   }
 ];

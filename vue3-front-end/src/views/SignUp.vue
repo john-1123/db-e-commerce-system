@@ -1,6 +1,5 @@
 <template>
   <v-container class="text-center">
-    <v-btn to="/home" class="ma-5" color="warning">Go To Home</v-btn>
     <v-card elevation="2" tile max-width="500" class="ma-auto">
       <v-card-title>Sign Up</v-card-title>
       <v-form class="ma-3">
