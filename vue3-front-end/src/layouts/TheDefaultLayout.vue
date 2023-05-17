@@ -16,7 +16,8 @@ export default defineComponent({
             <v-btn to="/sign-in">SignIn</v-btn>
             <v-btn to="/sign-up">SignUp</v-btn>
             <v-btn to="/profile">Profile</v-btn>
-            <v-btn to="/products">Products</v-btn>
+            <v-btn to="/carts">Cart</v-btn>
+            <v-btn to="/orders">Order</v-btn>
         </v-app-bar>
         <v-main>
             <slot></slot>
