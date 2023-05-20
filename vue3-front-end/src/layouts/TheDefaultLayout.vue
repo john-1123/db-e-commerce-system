@@ -18,6 +18,7 @@ export default defineComponent({
             <v-btn to="/profile">Profile</v-btn>
             <v-btn to="/carts">Cart</v-btn>
             <v-btn to="/orders">Order</v-btn>
+            <v-btn to="/manage/product">Manage Product</v-btn>
         </v-app-bar>
         <v-main>
             <slot></slot>
