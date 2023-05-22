@@ -32,6 +32,8 @@ import useValidate from "@vuelidate/core";
 import { required } from "@vuelidate/validators";
 import { computed, defineComponent, reactive } from "vue";
 import { useRouter } from "vue-router";
+import AuthService from "../services/AuthService";
+import Login from "../models/user/login";
 
 export default defineComponent({
   name: "sign-up",
@@ -62,9 +64,19 @@ export default defineComponent({
   methods: {
     submitForm() {
       this.v$.$validate();
-      if(!this.v$.$error) {
-        // pass
-        this.router.push('/home')
+      if (!this.v$.$error) {
+        const user: Login = {
+          email: this.state.email,
+          password: this.state.password,
+        };
+        AuthService.login(user)
+          .then((response: any) => {
+            console.log(response);
+            this.router.push("/home");
+          })
+          .catch((e: Error) => {
+            console.log(e);
+          });
       }
     },
   },
