@@ -12,8 +12,8 @@ class AuthService:
     def login(self, data):
         user = User.query.filter_by(email=data['email']).first()
         if not user or not user.verify(data['password']):
-            return self.user_schema.jsonify(None)
-        return self.user_schema.jsonify(user)
+            return False
+        return True
     
     def signup(self, data):
         user = User.query.filter_by(email=data['email']).first()
