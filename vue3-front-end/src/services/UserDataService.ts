@@ -7,9 +7,9 @@ class UserDataService {
   //   return http.get("/users");
   // }
 
-  // get(id: number): Promise<any> {
-  //   return http.get(`/users/${id}`);
-  // }
+  get(id: number): Promise<any> {
+    return http.get(`/users/${id}`);
+  }
 
   // create(data: CreateUser): Promise<any> {
   //   return http.post("/users", data);
