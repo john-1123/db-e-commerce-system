@@ -17,3 +17,6 @@ class User(db.Model):
         self.address = address
         self.phone = phone
         self.registered_on = registered_on
+    
+    def verify(self, password):
+        return self.password == password

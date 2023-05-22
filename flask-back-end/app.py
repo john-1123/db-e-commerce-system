@@ -2,6 +2,7 @@ from flask import Flask
 from flask_restful import Api
 from flask_migrate import Migrate
 from flask_cors import CORS
+from main.controllers.auth import AuthLogin, AuthSignUp
 from main.controllers.welcome import HelloWorld
 from main.controllers.user import GetAllUser, GetUser, CreateUser, UpdateUser, DeleteUser
 from main.models._db import db
@@ -23,11 +24,13 @@ migrate = Migrate(app, db)
 api.add_resource(HelloWorld, '/')
 # user api
 api.add_resource(GetAllUser, '/users')
-api.add_resource(GetUser, '/users/<int:id>')
-api.add_resource(CreateUser, '/users')
+# api.add_resource(GetUser, '/users/<int:id>')
+# api.add_resource(CreateUser, '/users')
 api.add_resource(UpdateUser, '/users/<int:id>')
 api.add_resource(DeleteUser, '/users/<int:id>')
-
+# auth api
+api.add_resource(AuthLogin, '/login')
+api.add_resource(AuthSignUp, '/signup')
 
 with app.app_context():
     db.create_all()
