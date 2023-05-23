@@ -4,18 +4,18 @@ import User from "../models/user/user";
 export const authStore = createStore({
   state() {
     return {
-      isLogin: false,
+      isLogin: sessionStorage.getItem('user') != undefined ? true : false,
     };
   },
 
   mutations: {
     login(state, user: User) {
       state.isLogin = true;
-      localStorage.setItem('user', user.username);
+      sessionStorage.setItem('user', user.username);
     },
     logout(state) {
       state.isLogin = false;
-      localStorage.clear();
+      sessionStorage.clear();
     },
   },
 });
