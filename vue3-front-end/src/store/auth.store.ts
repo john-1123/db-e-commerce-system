@@ -1,4 +1,5 @@
 import { createStore } from "vuex";
+import User from "../models/user/user";
 
 export const authStore = createStore({
   state() {
@@ -8,11 +9,13 @@ export const authStore = createStore({
   },
 
   mutations: {
-    login(state) {
+    login(state, user: User) {
       state.isLogin = true;
+      localStorage.setItem('user', user.username);
     },
     logout(state) {
       state.isLogin = false;
+      localStorage.clear();
     },
   },
 });

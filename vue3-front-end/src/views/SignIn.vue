@@ -73,7 +73,7 @@ export default defineComponent({
         AuthService.login(user)
           .then((response: any) => {
             console.log(response);
-            this.authStore.commit("login");
+            this.authStore.commit("login", response['data']);
             this.router.push("/home");
           })
           .catch((e: Error) => {
