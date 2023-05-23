@@ -17,17 +17,15 @@ class MarketService:
         market = Market.query.get(market_id)
         return self.market_schema.jsonify(market)
 
-    def create(self, market_id, data=None):
-        market = Market.query.get(market_id)
-        if not market:
-            user_id = data.get('user_id')  
-            user = User.query.get(user_id)
-            if not user:
-                return "User not found", 404
-            
+    def create(self, data):
+        market = Market.query.filter_by(user_id=data['user_id']).first()
+        if not market:  
+            # user = User.query.get(data['user_id'])
+            # if not user:
+            #     return "User not found", 404
             new_market = Market(
                 market_name = data['market_name'],
-                uid = user.user_id,
+                user_id = data['user_id'],
                 registered_on = datetime.datetime.now()
             )
             save(new_market)
