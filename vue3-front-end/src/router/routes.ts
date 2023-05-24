@@ -1,19 +1,26 @@
 import { RouteRecordRaw } from 'vue-router';
 
+function loginGuard() {
+  if(sessionStorage.getItem('user')==null) {
+    return { name: 'SignIn'}
+  }
+  return true
+}
+
 const routes: Array<RouteRecordRaw> = [
   {
-    path: '/',
+    path: '/home',
     name: 'Home',
     component: () => import(/* webpackChunkName: "home" */ '../views/Home.vue'),
     meta: {
       layout: 'Default',
     },
-    alias: '/home',
   },
   {
     path: '/profile',
     name: 'Profile',
     component: () => import(/* webpackChunkName: "profile" */ '../views/Profile.vue'),
+    beforeEnter: loginGuard,
     meta: {
       layout: 'Default',
     },
@@ -38,6 +45,7 @@ const routes: Array<RouteRecordRaw> = [
     path: '/carts',
     name: 'Cart',
     component: () => import('../views/Cart.vue'),
+    beforeEnter: loginGuard,
     meta: {
       layout: 'Default'
     }
@@ -46,6 +54,7 @@ const routes: Array<RouteRecordRaw> = [
     path: '/orders',
     name: 'Order',
     component: () => import('../views/Order.vue'),
+    beforeEnter: loginGuard,
     meta: {
       layout: 'Default'
     }
