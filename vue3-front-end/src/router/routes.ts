@@ -60,6 +60,11 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
+    path: '/',
+    name: 'redirect',
+    redirect: '/home'
+  },
+  {
     path: '/product/detail',
     name: 'ProductDetail',
     component: () => import('../views/ProductDetail.vue'),
