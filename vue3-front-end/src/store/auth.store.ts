@@ -11,7 +11,7 @@ export const authStore = createStore({
   mutations: {
     login(state, user: User) {
       state.isLogin = true;
-      sessionStorage.setItem('user', user.username);
+      sessionStorage.setItem('user', user.user_id!.toString());
     },
     logout(state) {
       state.isLogin = false;

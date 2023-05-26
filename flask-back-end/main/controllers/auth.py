@@ -9,9 +9,10 @@ user_service = UserService()
 
 class AuthLogin(Resource):
     def post(self):
-        if not auth_service.login(data=request.json):
+        user = auth_service.login(data=request.json)
+        if not user:
             flask_restful.abort(401)
-        return user_service.get(email=request.json['email'])
+        return user
     
 class AuthSignUp(Resource):
     def post(self):
