@@ -1,6 +1,5 @@
 from main.models._db import save, delete
 from flask import jsonify
-from main.models.user import User
 from main.models.market import Market
 from main.schemas.market import MarketSchema
 import datetime
@@ -20,9 +19,6 @@ class MarketService:
     def create(self, data):
         market = Market.query.filter_by(user_id=data['user_id']).first()
         if not market:  
-            # user = User.query.get(data['user_id'])
-            # if not user:
-            #     return "User not found", 404
             new_market = Market(
                 market_name = data['market_name'],
                 user_id = data['user_id'],

@@ -26,7 +26,7 @@ class ProductService:
                 brand = data['brand'],
                 price = data['price'],
                 stock = data['stock'],
-                market_id =  data['marked_id'],
+                market_id =  data['market_id'],
             )
 
             save(new_product)
