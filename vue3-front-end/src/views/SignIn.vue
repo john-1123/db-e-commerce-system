@@ -1,3 +1,4 @@
+
 <template>
   <v-container class="text-center">
     <v-card elevation="2" tile max-width="500" class="ma-auto">
@@ -32,15 +33,12 @@ import useValidate from "@vuelidate/core";
 import { required } from "@vuelidate/validators";
 import { computed, defineComponent, reactive } from "vue";
 import { useRouter } from "vue-router";
-import AuthService from "../services/AuthService";
-import Login from "../models/user/login";
-import { useStore } from "vuex";
 
 export default defineComponent({
   name: "sign-up",
   setup() {
     const router = useRouter();
-    const authStore = useStore();
+
     const state = reactive({
       email: "",
       password: "",
@@ -55,7 +53,7 @@ export default defineComponent({
 
     const v$ = useValidate(rules, state);
 
-    return { router, state, v$, authStore };
+    return { router, state, v$ };
   },
   data() {
     return {
@@ -65,20 +63,9 @@ export default defineComponent({
   methods: {
     submitForm() {
       this.v$.$validate();
-      if (!this.v$.$error) {
-        const user: Login = {
-          email: this.state.email,
-          password: this.state.password,
-        };
-        AuthService.login(user)
-          .then((response: any) => {
-            console.log(response);
-            this.authStore.commit("login", response['data']);
-            this.router.push("/home");
-          })
-          .catch((e: Error) => {
-            console.log(e);
-          });
+      if(!this.v$.$error) {
+        // pass
+        this.router.push('/home')
       }
     },
   },

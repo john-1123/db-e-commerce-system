@@ -1,0 +1,9 @@
+{
+    "cart": [
+        {"member_id": "M01","market_id": "A01","product_id": "P01","quantity": "1"},
+        {"member_id": "M02","market_id": "A02","product_id": "P02","quantity": "2"},
+        {"member_id": "M03","market_id": "A03","product_id": "P03","quantity": "20"},
+        {"member_id": "M04","market_id": "A04","product_id": "P04","quantity": "25"},
+        {"member_id": "M05","market_id": "A05","product_id": "P05","quantity": "29"},
+      ],
+}

@@ -1,28 +1,31 @@
 import http from "../http-common";
+import CreateUser from "../models/user/create-user";
 import UpdateUser from "../models/user/update-user";
-import User from "../models/user/user";
+
 
 class UserDataService {
-  get(id: number): Promise<any> {
-    const user = new User(
-      "john",
-      "john@gmail.com",
-      "password",
-      "road",
-      "0912345678"
-    );
-    return new Promise<User>((resolve) => {
-      resolve(user);
-    });
-    // return http.get(`/users/${id}`);
+  getAll(): Promise<any> {
+    return http.get("/users");
   }
-  
+
+  get(id: number): Promise<any> {
+    return http.get(`/users/${id}`);
+  }
+
+  create(data: CreateUser): Promise<any> {
+    return http.post("/users", data);
+  }
+
   update(id: number, data: UpdateUser): Promise<any> {
     return http.put(`/users/${id}`, data);
   }
 
   delete(id: number): Promise<any> {
     return http.delete(`/users/${id}`);
+  }
+
+  deleteAll(): Promise<any> {
+    return http.delete(`/users`);
   }
 }
 export default new UserDataService();

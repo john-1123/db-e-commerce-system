@@ -15,17 +15,19 @@
     "@vuelidate/validators": "^2.0.2",
     "add": "^2.0.6",
     "axios": "^1.4.0",
-    "vue": "^3.2.41",
+    "bootstrap": "^4.6.2",
+    "bootstrap-vue": "^2.23.1",
+    "vue": "^3.3.3",
     "vue-router": "^4.1.6",
-    "vuetify": "^3.0.1",
-    "vuex": "^4.0.2"
+    "vuetify": "^3.2.5",
+    "vuex": "^4.1.0"
   },
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^6.4.0",
     "@vitejs/plugin-vue": "^3.2.0",
     "prettier": "2.8.8",
     "typescript": "^4.6.4",
-    "vite": "^3.2.3",
+    "vite": "^3.2.6",
     "vue-tsc": "^1.0.9"
   }
 }
