@@ -13,8 +13,8 @@ class UserService:
         users = User.query.all()
         return jsonify(self.users_schema.dump(users))
 
-    def get(self, user_id):
-        user = User.query.get(user_id)
+    def get(self, email):
+        user = User.query.filter_by(email=email).first()
         return self.user_schema.jsonify(user)
 
     def create(self, data):
