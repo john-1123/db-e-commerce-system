@@ -58,6 +58,11 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       layout: 'Default'
     }
+  },
+  {
+    path: '/',
+    name: 'redirect',
+    redirect: '/home'
   }
 ];
 
