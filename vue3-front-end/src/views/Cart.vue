@@ -1,9 +1,9 @@
 <template>
   <div class="cart-container">
     <h2>Cart List</h2>
-    <div v-for="(items, marketId) in cartItemsByMarket" :key="marketId" class="market-container">
+    <div v-for="(items, marketName) in cartItemsByMarket" :key="marketName" class="market-container">
       <div class="market-header">
-        <h2>{{ marketId }}</h2>
+        <h2>{{ marketName }}</h2>
         <div class="action-buttons">
           <p>
             <button @click="buy(items)" color="tan" class='button'>
@@ -11,8 +11,8 @@
             </button>
           </p>
           <p>
-            <button @click="delet(marketId)" color="tan" class='button'>
-              Delete
+            <button @click="delet(items)" color="tan" class='button'>
+            Delete
             </button>
           </p>
         </div>
@@ -22,12 +22,12 @@
           <div class="product-info">
             <div class="center-section">
               <p>
-                Product: {{ item.product_id }}
+                Product: {{ item.product_name }}
                 &nbsp;
                 &nbsp;
                 &nbsp;
                 Price: {{ item.price }}
-                Quantity: {{ item.quantity }}
+                Stock: {{ item.stock }}
               </p>
             </div>
           </div>
@@ -42,18 +42,22 @@
         <v-card-text>
           <div v-for="(order, productID) in buyshoworder" :key="productID">
             <p>
-              Product ID: {{ BuyshowDialog && order.product_id }}
+              Product : {{ BuyshowDialog && order.product_name }}
               &nbsp;
               &nbsp;
               &nbsp;
-              Price: {{ BuyshowDialog && order.price }}
-              Quantity: {{ BuyshowDialog && order.quantity }}
+              <p>Price: {{ BuyshowDialog && order.price }}
+              Quantity:<input type="number" v-model="order.quantity" min="0"></p>
             </p>
             <br>
           </div>
           <v-text-field v-model="consignee" label="Consignee"></v-text-field>
           <br>
           <v-text-field v-model="shippingAddress" label="Shipping Address"></v-text-field>
+          <br>
+          <v-text-field v-model="mode_of_transport" label="Transport"></v-text-field>
+          <br>
+          <v-text-field v-model="payment" label="Payment method"></v-text-field>
         </v-card-text>
         <v-card-actions>
           <v-btn color="tan" @click="submitOrder">
@@ -65,12 +69,17 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <!-- 根据用户角色显示订单列表 
+      <v-pagination v-model="currentPage" :total-visible="itemsPerPage" :length="totalPages">
+      </v-pagination>
+    -->
   </div>
 </template>
 
 
 <script>
 import axios from 'axios';
+import { ref } from 'vue';
 
 export default {
   data() {
@@ -78,8 +87,13 @@ export default {
       cartItems: [],
       BuyshowDialog: false,
       buyshoworder: {},
+      deletorder : {},
       consignee: "",
-      shippingAddress: ""
+      shippingAddress: "",
+      mode_of_transport:"",
+      payment:"",
+      //currentPage: 1,
+      //itemsPerPage: 5, 
     };
   },
 
@@ -105,14 +119,55 @@ export default {
         const productID = item.product_id;
         if (!this.buyshoworder[productID]) {
           this.buyshoworder[productID] = {
-            product_id: item.product_id,
+            product_name: item.product_name,
             price: item.price,
+            stock: item.stock,
             quantity: item.quantity
           };
         }
       }
-      //console.log(this.buyshoworder);
+      console.log(this.buyshoworder);
       this.BuyshowDialog = true;
+    },
+
+    submitOrder() {
+      if (!this.consignee || !this.shippingAddress || !this.mode_of_transport || !this.payment) {
+        console.log("Requirement");
+        return;
+      }
+
+      for(const [productID, order] of Object.entries(this.buyshoworder)){
+        const quantity = parseInt(order.quantity);
+        const stock = parseInt(order.stock);
+        if (quantity > stock) {
+          console.log("Do not buy more.");
+          return;
+        }
+      }
+      
+      const orderData = {};
+      for (const [productID, order] of Object.entries(this.buyshoworder)) {
+        orderData[productID] = {
+          product_id: order.product_id,
+          price: order.price,
+          quantity: order.quantity,
+          stock: order.stock,
+        }
+      }
+
+      orderData.consignee = this.consignee;
+      orderData.shipping_address = this.shippingAddress;
+      orderData.mode_of_transport = this.mode_of_transport;
+      orderData.payment_method = this.payment;
+      orderData.create_time = new Date().getTime();
+      orderData.last_modified_time = new Date().getTime();
+      
+      this.placeOrder(orderData);
+      this.BuyshowDialog = false;
+      this.consignee = ""; 
+      this.shippingddress = "";
+      this.mode_of_transport = "";
+      this.payment = ""
     },
 
     placeOrder(orderData) {
@@ -130,41 +185,26 @@ export default {
       this.buyshoworder = {};
       this.BuyshowDialog = false;
       this.consignee = ""; 
-      this.shippingAddress = ""
+      this.shippingAddress = "",
+      this.mode_of_transport = "",
+      this.payment = ""
     },
 
-    submitOrder() {
-      if (!this.consignee || !this.shippingAddress) {
-        console.log("Requirement");
-        return;
+    delet(items) {
+      const deletorder = {};
+      for (const item of items){
+        const deletmarketID = item.market_id;
+        const deletproductID = item.product_id;
+        deletorder.market_id = this.deletmarketID;
+        deletorder.product_id = this.deletproductID;
       }
-      const orderData = {};
-      for (const [productID, order] of Object.entries(this.buyshoworder)) {
-        orderData[productID] = {
-          product_id: order.product_id,
-          price: order.price,
-          quantity: order.quantity,
-        };
-      }
-      orderData.consignee = this.consignee;
-      orderData.shipping_address = this.shippingAddress;
-      orderData.timestamp = new Date().getTime();
-      
-      this.placeOrder(orderData);
-      this.BuyshowDialog = false;
-      this.consignee = ""; 
-      this.shippingAddress = "";
-    },
-
-    delet(marketId) {
-      axios.post('http://localhost:3000/consignee', { market_id: marketId })
+      axios.post('http://localhost:3000/consignee', deletorder)
       .then((res) => {
         console.log('Successful delete data.');
       })
       .catch((error) => {
         console.log('Error delete data.');
       });
-      pass
     },
   },
  
@@ -172,16 +212,39 @@ export default {
     cartItemsByMarket() {
       const itemsByMarket = {};
       for (const item of this.cartItems) {
-        const marketId = item.market_id;
-        if (!itemsByMarket[marketId]) {
-          itemsByMarket[marketId] = [];
-          itemsByMarket[marketId].push(item);
+        const marketName = item.market_name;
+        if (!itemsByMarket[marketName]) {
+          itemsByMarket[marketName] = [];
+          itemsByMarket[marketName].push(item);
         }else{
-          itemsByMarket[marketId].push(item);
+          itemsByMarket[marketName].push(item);
         }
       }
       return itemsByMarket;
     },
+
+    /*totalItems() {
+      let totalCount = 0;
+      for (const marketName in this.cartItemsByMarket) {
+        totalCount += this.cartItemsByMarket[marketName].length;
+      }
+      return totalCount;
+    },
+
+    totalPages() {
+      return Math.ceil(this.totalItems / this.itemsPerPage); 
+    },
+
+    displayedCartItems() {
+      const start = (this.currentPage - 1) * this.itemsPerPage; 
+      const end = start + this.itemsPerPage; 
+      const displayedItems = [];
+      for (const marketName in this.cartItemsByMarket) {
+        const items = this.cartItemsByMarket[marketName].slice(start, end);
+        displayedItems.push(...items);
+      }
+      return displayedItems; 
+    },*/
   },
 };
 </script>

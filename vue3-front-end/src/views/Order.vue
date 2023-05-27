@@ -5,21 +5,30 @@
             <v-btn @click="toggleRole" color="tan">{{ role }}</v-btn>
         </div>
         <div v-if="role === 'Buyer'">
-            <div v-for="order in orderInformation" :key="order.order_id">
+            <div v-for="order in displayedOrders" :key="order.order_id" >
                 <div class="order-box">
                     <div class="order-details">
                         <div class="left-section">
-                            <p>Product: {{ order.product_name }}</p>
-                            <p>Price: {{ order.total_pay }} </p>
+                            <p><h4>OrderID: &nbsp; &nbsp; <span style="color: #94785A"> {{ order.order_id }}</span></h4></p>
                         </div>
-                        <div class="center-section">
-                            <p>Market: {{ order.market_name }} </p>
-                            <p>State: {{ order.state }}</p> 
+                        <div class="center-section">  
+                            &nbsp;
+                            <p>Market: {{ order.market_name }} &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Product: {{ order.product_name }}</p>              
+                            <p>Price: {{ order.price }} &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  &nbsp; Quantity: {{ order.quantity }} </p>
+                            <p>Total: {{ (parseFloat(order.price)) * parseFloat((order.quantity)) }} </p>
                         </div>
                         <div class="right-section">
-                            <v-btn @click="showBuyerDetails(order)" color="tan">
-                                details
-                            </v-btn>
+                            <p><h4>State: &nbsp; <span style="color: #94785A">{{ order.state }}</span></h4></p> 
+                            <p>
+                                <v-btn @click="showBuyerDetails(order)" color="tan">
+                                    details
+                                </v-btn>
+                            </P>
+                            <p>
+                                <v-btn @click='deletBuyer(order)' color="tan">
+                                    Delete
+                                </v-btn>
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -32,7 +41,9 @@
                     <v-card-text>
                         <p>payment_method: {{ BuyerselectedOrder && BuyerselectedOrder.payment_method }}</p>
                         <p>shipping_address: {{ BuyerselectedOrder && BuyerselectedOrder.shipping_address }}</p>
+                        <p>mode_of_transport: {{ BuyerselectedOrder && BuyerselectedOrder.mode_of_transport }}</p>
                         <p>create_time: {{ BuyerselectedOrder && BuyerselectedOrder.create_time }}</p>
+                        <p>Last_modified_time: {{ BuyerselectedOrder && BuyerselectedOrder.last_modified_time }}</p>
                     </v-card-text>
                     <v-card-actions>
                         <v-btn color="tan" text @click="closeBuyerDetails">Close</v-btn>
@@ -41,23 +52,28 @@
             </v-dialog>
         </div>
         <div v-else>
-            <div v-for="order in orderInformation" :key="order.order_id">
+            <div v-for="order in displayedOrders" :key="order.order_id">
                 <div class="order-box">
                     <div class="order-sellerdetails">
                         <div class="left-sellersection">
                             <p>Consignee Information</p>
                             <p>Consignee: {{ order.consignee }}</p>
                             <p>Shipping Address: {{ order.shipping_address }}</p>
-                            <p>Phone Number: {{ }}</p>
+                            <p>Phone: {{ order.phone }}</p>
                         </div>
                         <div class="center-sellersection">
                             <p>Product Information</p>
-                            <p>Product: {{ }}</p>
-                            <p>Price: {{ }}</p>
+                            <p>Product: {{ order.product_name }}</p>
+                            <p>Price: {{ order.price }}</p>
+                            <p>State: {{ order.state }}</p>
                         </div>
                         <div class="right-sellersection">
                             <v-btn @click="showSellerDetails(order)" color="tan" small>
                                 Details
+                            </v-btn>
+                            &nbsp;
+                            <v-btn @click='deletSeller(order)' color="tan">
+                                Delete
                             </v-btn>
                         </div>
                     </div>
@@ -77,11 +93,15 @@
                     <p>Mode of Transport: {{ SellerselectedOrder && SellerselectedOrder.mode_of_transport }}</p>
                 </v-card-text>
                 <v-card-actions>
-                    <v-btn color="tan" text @click="closeSellerDetails">Close</v-btn>
+                    <v-btn color="tan" text @click="closeSellerDetails">
+                        Close
+                    </v-btn>
                     <div v-if="SellershowDialog"></div>
                 </v-card-actions>
             </v-card>
         </v-dialog>
+        <v-pagination v-model="currentPage" :total-visible="itemsPerPage" :length="totalPages" class="fixed-pagination">
+        </v-pagination>
     </v-container>
 </template>
   
@@ -97,12 +117,28 @@ export default {
             BuyershowDialog: false,
             SellerselectedOrder: null,
             BuyerselectedOrder: null,
+            currentPage: 1, 
+            itemsPerPage: 3,
         };
     },
   
     mounted() {
         this.getOrders();
     },
+
+    computed: {
+    totalItems() {
+      return this.orderInformation.length;
+    },
+    totalPages() {
+      return Math.ceil(this.totalItems / this.itemsPerPage); 
+    },
+    displayedOrders() {
+      const start = (this.currentPage - 1) * this.itemsPerPage; 
+      const end = start + this.itemsPerPage; 
+      return this.orderInformation.slice(start, end); 
+    },
+  },
   
     methods: {
         getOrders() {
@@ -141,6 +177,45 @@ export default {
             this.BuyerselectedOrder = null;
             this.BuyershowDialog = false;
         },
+        
+        deletBuyer(order){
+            //console.log(order)
+            const deletBuyerorder = {};
+            const orderID = order.order_id;
+            deletBuyerorder.order_id = this.orderID;
+
+            axios.post('http://localhost:3000/deletBuyerorder', deletBuyerorder)
+            .then((res) => {
+                console.log('Successful delete order_id.');
+            })
+            .catch((error) => {
+                console.log('Error delete order_id.');
+            });
+        },
+
+        deletSeller(order){
+            //console.log(order)
+            const deletSellerorder = {};
+            const orderID = order.order_id;
+            deletSellerorder.order_id = this.orderID;
+
+            axios.post('http://localhost:3000/deletBuyerorder', deletSellerorder)
+            .then((res) => {
+                console.log('Successful delete order_id.');
+            })
+            .catch((error) => {
+                console.log('Error delete order_id.');
+            });
+        },
+
+        goToPage(pageNumber) {
+            this.currentPage = pageNumber;
+        },
+        
+        toggleRole() {
+            this.role = this.role === 'Buyer' ? 'Seller' : 'Buyer';
+        }
+        
     },
 };
 </script>
@@ -148,9 +223,10 @@ export default {
 <style scoped>
 .order-box {
     font-family: Arial, sans-serif;
-    border: 10px solid #ccc;
+    border: 1px solid #ccc;
     padding: 5px;
     margin-bottom: 20px;
+    background-color: #FFFFFF;
 }
   
 .header {
@@ -165,12 +241,12 @@ export default {
 }
 
 .center-section {
-    flex: 1;
+    flex: 1.5;
     text-align: left;
 }
 
 .right-section {
-    flex: 0;
+    flex: 1d;
 }
 
 .order-details {
@@ -203,5 +279,17 @@ export default {
 .right-sellersection {
     align-items: center;
     flex: 0;
+}
+
+.fixed-pagination {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+}
+
+p {
+    margin-top: 3px;
+    margin-bottom: 3px;
 }
 </style>
