@@ -3,7 +3,7 @@
     <h1>Items</h1>
     <v-row 
       class="justify-center"
-      no-gutters v-for="market in data.items" :key="market.id">
+      no-gutters v-for="market in data.items" :key="market.market_id">
       <v-col cols="12" md="12" class="ma-3">
         <v-chip size="large" append-icon="mdi-arrow-right">{{ market.market_name }}</v-chip>
       </v-col>
@@ -29,7 +29,7 @@
   </v-container>
 </template>
 
-<script>
+<script lang="ts">
 import axios from "axios";
 import { computed, defineComponent, reactive, onMounted } from "vue";
 
