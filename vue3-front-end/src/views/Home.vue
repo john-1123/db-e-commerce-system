@@ -1,11 +1,16 @@
 <template>
   <v-container class="text-center">
-    <h1>Items</h1>
-    <v-row 
+    <h1>Home</h1>
+    <v-row
       class="justify-center"
-      no-gutters v-for="market in data.items" :key="market.market_id">
+      no-gutters
+      v-for="market in data.items"
+      :key="market.market_id"
+    >
       <v-col cols="12" md="12" class="ma-3">
-        <v-chip size="large" append-icon="mdi-arrow-right">{{ market.market_name }}</v-chip>
+        <v-chip size="large" append-icon="mdi-arrow-right" @click="goMarket">{{
+          market.market_name
+        }}</v-chip>
       </v-col>
 
       <v-col
@@ -21,7 +26,9 @@
           <v-card-subtitle>{{ product.description }}</v-card-subtitle>
           <v-card-title>Price: ${{ product.price }}</v-card-title>
           <v-card-actions>
-            <v-btn rounded="lg" variant="tonal" prepend-icon="mdi-cart">加入購物車</v-btn>
+            <v-btn rounded="lg" variant="tonal" prepend-icon="mdi-cart"
+              >加入購物車</v-btn
+            >
           </v-card-actions>
         </v-card>
       </v-col>
@@ -30,11 +37,13 @@
 </template>
 
 <script lang="ts">
-import axios from "axios";
-import { computed, defineComponent, reactive, onMounted } from "vue";
+import { defineComponent, reactive } from "vue";
+import { useRouter } from "vue-router";
 
 export default defineComponent({
   setup() {
+    const router = useRouter();
+
     const data = reactive({
       items: [
         {
@@ -105,11 +114,16 @@ export default defineComponent({
         },
       ],
     });
-    return { data };
-  },
 
+    return { router, data };
+  },
   data() {
     return {};
+  },
+  methods: {
+    goMarket() {
+      this.router.push("/market");
+    },
   },
 });
 </script>

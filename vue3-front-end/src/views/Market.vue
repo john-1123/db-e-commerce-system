@@ -1,13 +1,14 @@
 <template>
   <v-container class="text-center">
     <h1>Market Product List</h1>
-    <v-row>
+    <v-row class="justify-center">
       <v-col
         cols="12"
         sm="6"
         md="3"
         v-for="product in data.products"
         :key="product.id"
+        class="ma-3 text-start"
       >
         <v-card>
           <v-card-title>{{ product.name }}</v-card-title>
@@ -25,8 +26,7 @@
 </template>
 
 <script lang="ts">
-import axios from "axios";
-import { computed, defineComponent, reactive, onMounted } from "vue";
+import { defineComponent, reactive } from "vue";
 
 export default defineComponent({
   setup() {
