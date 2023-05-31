@@ -10,6 +10,7 @@ class Product(db.Model):
     price = db.Column(db.Integer, nullable=False)
     stock = db.Column(db.Integer, nullable=False)
     market_id = db.Column(db.Integer, db.ForeignKey("market.market_id"), nullable=False)
+    status = db.Cloumn(db.Boolean, nullable = False)
     cart_item = db.relationship('cart_item', backref='product')
 
     def __init__(self, product_name, category, brand, price, stock, market_id):
