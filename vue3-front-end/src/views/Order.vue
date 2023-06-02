@@ -9,21 +9,21 @@
                 <div class="order-box">
                     <div class="order-details">
                         <div class="left-section">
-                            <p><h4>OrderID: &nbsp; &nbsp; <span style="color: #94785A"> {{ order.order_id }}</span></h4></p>
+                            <p>OrderID: &nbsp; &nbsp;  {{ order.order_id }}</p>
+                            <p>State: &nbsp; {{ order.state }}</p> 
                         </div>
-                        <div class="center-section">  
-                            &nbsp;
+                        <div class="center-section">
                             <p>Market: {{ order.market_name }} &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Product: {{ order.product_name }}</p>              
                             <p>Price: {{ order.price }} &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  &nbsp; Quantity: {{ order.quantity }} </p>
                             <p>Total: {{ (parseFloat(order.price)) * parseFloat((order.quantity)) }} </p>
                         </div>
                         <div class="right-section">
-                            <p><h4>State: &nbsp; <span style="color: #94785A">{{ order.state }}</span></h4></p> 
                             <p>
                                 <v-btn @click="showBuyerDetails(order)" color="tan">
                                     details
                                 </v-btn>
                             </P>
+                            <br>
                             <p>
                                 <v-btn @click='deletBuyer(order)' color="tan">
                                     Delete

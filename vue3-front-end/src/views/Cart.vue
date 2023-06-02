@@ -1,19 +1,21 @@
 <template>
   <div class="cart-container">
-    <h2>Cart List</h2>
+    <h1>Cart List</h1>
     <div v-for="(items, marketName) in cartItemsByMarket" :key="marketName" class="market-container">
       <div class="market-header">
-        <h2>{{ marketName }}</h2>
+        {{ marketName }}
         <div class="action-buttons">
           <p>
-            <button @click="buy(items)" color="tan" class='button'>
-              GO! BUY!
-            </button>
+          <br>
+            <v-btn @click="buy(items)" color="tan">
+              GO!BUY!
+            </v-btn>
           </p>
+          <br>
           <p>
-            <button @click="delet(items)" color="tan" class='button'>
+            <v-btn @click="delet(items)" color="tan">
             Delete
-            </button>
+            </v-btn>
           </p>
         </div>
       </div>
@@ -27,6 +29,9 @@
                 &nbsp;
                 &nbsp;
                 Price: {{ item.price }}
+                &nbsp;
+                &nbsp;
+                &nbsp;
                 Stock: {{ item.stock }}
               </p>
             </div>
@@ -98,19 +103,22 @@ export default {
   },
 
   mounted() {
+    //console.log('mounted');
     this.getCart();
   },
 
   methods: { 
     getCart() {
-      axios.get('http://localhost:3000/carts')
-        .then((res) => {
-          this.cartItems = res.data;
-          console.log(cartItems);
-        })
-        .catch((error) => {
-          console.log("No catch data.");
-        });
+      const path = 'http://localhost:3000/carts';
+      axios
+      .get(path)
+      .then((res) => {
+        this.cartItems = res.data;
+        //console.log(cartItems);
+      })
+      .catch((error) => {
+        //console.log("No catch data.");
+      });
     },
 
     buy(items) {
@@ -222,29 +230,6 @@ export default {
       }
       return itemsByMarket;
     },
-
-    /*totalItems() {
-      let totalCount = 0;
-      for (const marketName in this.cartItemsByMarket) {
-        totalCount += this.cartItemsByMarket[marketName].length;
-      }
-      return totalCount;
-    },
-
-    totalPages() {
-      return Math.ceil(this.totalItems / this.itemsPerPage); 
-    },
-
-    displayedCartItems() {
-      const start = (this.currentPage - 1) * this.itemsPerPage; 
-      const end = start + this.itemsPerPage; 
-      const displayedItems = [];
-      for (const marketName in this.cartItemsByMarket) {
-        const items = this.cartItemsByMarket[marketName].slice(start, end);
-        displayedItems.push(...items);
-      }
-      return displayedItems; 
-    },*/
   },
 };
 </script>
@@ -257,7 +242,7 @@ export default {
 }
 
 .market-container {
-  width: 50%;
+  width: 40%;
   margin: 10px;
   border: 1px solid rgba(0, 0, 0, 0.2); 
   padding: 10px;

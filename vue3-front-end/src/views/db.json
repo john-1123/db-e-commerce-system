@@ -2,15 +2,7 @@
   "carts": 
   [
     {"market_id": "M01","market_name":"MMM1","product_id":"P01","product_name":"PPP1","price":"1","quantity":"1","stock":"1000"},
-    {"market_id": "M01","market_name":"MMM1","product_id":"P010","product_name":"PPP2","price":"10","quantity":"10","stock":"1000"},
-    {"market_id": "M02","market_name":"MMM2","product_id":"P02","product_name":"PPP2","price":"2","quantity":"2","stock":"1000"},
-    {"market_id": "M020","market_name":"MMM1","product_id":"P020","product_name":"PPP3","price":"20","quantity":"20","stock":"1000"},
-    {"market_id": "M03","market_name":"MMM3","product_id":"P03","product_name":"PPP3","price":"3","quantity":"3","stock":"1000"},
-    {"market_id": "M030","market_name":"MMM1","product_id":"P030","product_name":"PPP4","price":"30","quantity":"30","stock":"1000"},
-    {"market_id": "M04","market_name":"MMM4","product_id":"P04","product_name":"PPP4","price":"4","quantity":"4","stock":"1000"},
-    {"market_id": "M05","market_name":"MMM5","product_id":"P05","product_name":"PPP5","price":"5","quantity":"5","stock":"1000"},
-    {"market_id": "M06","market_name":"MMM6","product_id":"P06","product_name":"PPP6","price":"6","quantity":"6","stock":"1000"},
-    {"market_id": "M07","market_name":"MMM7","product_id":"P07","product_name":"PPP7","price":"7","quantity":"7","stock":"1000"}
+    {"market_id": "M02","market_name":"MMM2","product_id":"P02","product_name":"PPP2","price":"2","quantity":"2","stock":"1000"}
   ],
   "order_buyer": 
   [
