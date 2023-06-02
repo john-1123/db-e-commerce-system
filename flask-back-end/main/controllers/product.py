@@ -1,6 +1,6 @@
 from flask import request
 from flask_restful import Resource
-from main.services.product import ProductService ###
+from main.services.product import ProductService
 
 service = ProductService()
 
