@@ -27,6 +27,7 @@ class ProductService:
                 price = data['price'],
                 stock = data['stock'],
                 market_id =  data['market_id'],
+                status = data['status'],
             )
 
             save(new_product)
@@ -41,6 +42,7 @@ class ProductService:
             product.price = data['price'],
             product.stock = data['stock'],
             product.market_id = data['market_id'],
+            product.status = data['status']
             save(product)
             return self.product_schema.jsonify(product)
 
