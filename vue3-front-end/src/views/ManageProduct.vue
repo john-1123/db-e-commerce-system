@@ -1,6 +1,5 @@
 <template>
-  <div>
-    <v-container>
+  <v-container>
       <v-row
         class="list px-3 mx-auto"
         style="height: 100px"
@@ -13,21 +12,12 @@
         </v-col>
         <v-spacer></v-spacer>
         <v-col cols="auto">
-          <v-btn color="orange-lighten-4" class="ml-8" @click="CreateProduct">
+          <v-btn color="orange-lighten-4" class="ml-8" @click="createProduct">
             建立產品
           </v-btn>
         </v-col>
       </v-row>
     </v-container>
-  </div>
-  <!-- <v-text-field
-          class="ma-3"
-          v-model="productList[2].status"
-          label="Product Name"
-          :error-messages="v$.product_name.$errors.map((e: any) => e.$message)"
-          @input="v$.product_name.$touch"
-          @blur="v$.product_name.$touch"
-    ></v-text-field> -->
 
   <v-table>
     <thead>
@@ -47,19 +37,22 @@
         <td>{{ product.product_name }}</td>
         <td>{{ product.category }}</td>
         <td>{{ product.brand }}</td>
-        <td>NTD$ {{ product.price.toLocaleString("zh-TW") }}</td>
+        <td>NTD$ {{ product.price }}</td>
         <td>{{ product.stock }}</td>
         <td>
           <v-row justify="center">
             <v-icon
-              @click="ChangeStatus(!product.status)"
-              :icon="product.status ? 'fa:fas fa-lock-open' : 'fa:fas fa-lock'"
+              @click="changeStatus(product)"
+              :icon="product.status ? 'fa:fas fa-lock' : 'fa:fas fa-lock-open'"
             ></v-icon>
           </v-row>
         </td>
         <td>
           <v-row>
-            <v-btn color="blue-grey-lighten-2" @click="dialog = true">
+            <v-btn
+              color="blue-grey-lighten-2"
+            >
+            <!-- @click="openDialog(product), (dialog = true)" -->
               <v-icon icon="fa:fas fa-edit"></v-icon>
             </v-btn>
             <v-dialog v-model="dialog" persistent width="1024">
@@ -72,61 +65,69 @@
                     <v-row>
                       <v-col cols="12">
                         <v-text-field
-                          v-model="product.product_name"
-                          label="Name*"
-                          required
+                          v-model="state.product_name"
+                          label="Name"
+                          :error-messages="v$.product_name.$errors.map((e: any) => e.$message)"
+                          @input="v$.product_name.$touch"
+                          @blur="v$.product_name.$touch"
                         ></v-text-field>
                       </v-col>
                       <v-col cols="12" sm="6" md="6">
                         <v-text-field
-                          v-model="product.category"
+                          v-model="state.category"
                           label="Category*"
-                          required
+                          :error-messages="v$.category.$errors.map((e: any) => e.$message)"
+                          @input="v$.category.$touch"
+                          @blur="v$.category.$touch"
                         ></v-text-field>
                       </v-col>
                       <v-col cols="12" sm="6" md="6">
                         <v-text-field
-                          v-model="product.brand"
+                          v-model="state.brand"
                           label="Brand*"
-                          required
+                          :error-messages="v$.brand.$errors.map((e: any) => e.$message)"
+                          @input="v$.brand.$touch"
+                          @blur="v$.brand.$touch"
                         ></v-text-field>
                       </v-col>
                       <v-col cols="12">
                         <v-text-field
-                          v-model="product.price"
+                          v-model="state.price"
                           label="Price*"
-                          required
+                          :error-messages="v$.price.$errors.map((e: any) => e.$message)"
+                          @input="v$.price.$touch"
+                          @blur="v$.price.$touch"
                         ></v-text-field>
                       </v-col>
                       <v-col cols="12">
                         <v-text-field
-                          v-model="product.stock"
+                          v-model="state.stock"
                           label="Stock*"
-                          required
+                          :error-messages="v$.stock.$errors.map((e: any) => e.$message)"
+                          @input="v$.stock.$touch"
+                          @blur="v$.stock.$touch"
                         ></v-text-field>
                       </v-col>
                     </v-row>
                   </v-container>
                 </v-card-text>
                 <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <v-btn
-                    color="blue-darken-1"
-                    variant="text"
-                    @click="dialog = false"
-                  >
-                    Close
-                  </v-btn>
-                  <v-btn
-                    color="blue-darken-1"
-                    variant="text"
-                    @click="
-                      UpdateProduct();
-                      dialog = false;
-                    "
-                  >
-                    Save
-                  </v-btn>
+                  <v-row class="justify-end mx-3">
+                    <v-btn
+                      color="blue-darken-1"
+                      variant="tonal"
+                      @click="updateProduct(product.product_id)"
+                    >
+                      Save
+                    </v-btn>
+                    <v-btn
+                      color="blue-darken"
+                      variant="tonal"
+                      @click="dialog = false"
+                    >
+                      Close
+                    </v-btn>
+                  </v-row>
                 </v-card-actions>
               </v-card>
             </v-dialog>
@@ -134,7 +135,10 @@
         </td>
         <td>
           <v-row>
-            <v-icon icon="fa:fas fa-trash" @click="deleteProduct"></v-icon>
+            <v-icon
+              icon="fa:fas fa-trash"
+              @click="deleteProduct(product.product_id)"
+            ></v-icon>
           </v-row>
         </td>
         <td></td>
@@ -146,18 +150,16 @@
 <script lang="ts">
 import useValidate from "@vuelidate/core";
 import { required } from "@vuelidate/validators";
-import { useRouter } from "vue-router";
 import { computed, defineComponent, reactive } from "vue";
+import { useRouter } from "vue-router";
+import Product, { UpdateProduct } from "../models/user/product";
+import MarketDataService from "../services/MarketDataService";
 import ProductDataService from "../services/ProductDataService";
-import Product from "../models/user/product";
-import { UpdateProduct } from "../models/user/product";
 
 export default defineComponent({
   name: "ManageProduct",
   setup() {
     const router = useRouter();
-    const productList = reactive<Product[]>([]);
-    // const product = {} as Product;
 
     const state = reactive({
       product_name: "",
@@ -165,6 +167,7 @@ export default defineComponent({
       brand: "",
       price: 0,
       stock: 0,
+      status: false,
     } as UpdateProduct);
 
     const rules = computed(() => {
@@ -174,72 +177,73 @@ export default defineComponent({
         brand: { required },
         price: { required },
         stock: { required },
+        status: { required },
       };
     });
 
     const v$ = useValidate(rules, state);
-    const product_id = 1;
-    if (product_id) {
-      ProductDataService.getAll().then((response: any) => {
-        console.log(response);
-        response.map((product: Product) => {
-          productList.push(product);
-        });
 
-        // state.product_name = response["product_name"];
-        // state.category = response["category"];
-        // state.brand = response["brand"];
-        // state.price = response["price"];
-        // state.stock = response["stock"];
-      });
-    }
-
-    return { router, product_id, state, v$, productList };
+    return { router, state, v$ };
   },
 
   data() {
-    return { dialog: false };
+    return {
+      dialog: false,
+      productList: [] as Product[],
+    };
   },
 
   methods: {
-    ChangeStatus(status: boolean) {
-      //參數還需要加上id: number
-      let data = {
-        product_id: this.state.product_id,
-        product_name: this.state.product_name,
-        category: this.state.category,
-        brand: this.state.brand,
-        price: this.state.price,
-        stock: this.state.stock,
-        market_id: this.state.market_id,
-        status: this.state.status,
-      };
+    getProducts() {
+      const userId = Number(sessionStorage.getItem("user"));
+      if (userId) {
+        MarketDataService.getMarketByUser(userId)
+          .then((response: any) => {
+            const market_id = response.data.market_id;
+            ProductDataService.getProductByMarket(market_id)
+              .then((response: any) => {
+                console.log(response);
+                this.productList = response.data;
+              })
+              .catch((e: Error) => {
+                console.log(e);
+              });
+          })
+          .catch((e: Error) => {
+            console.log(e);
+          });
+      }
+    },
 
-      ProductDataService.update(this.state.product_id, data)
+    changeStatus(product: Product) {
+      product.status = !product.status;
+      ProductDataService.update(product.product_id, product)
         .then((response: any) => {
-          this.state.status = status;
-          console.log(response.data);
+          console.log(response);
         })
         .catch((e: Error) => {
           console.log(e);
         });
     },
 
-    UpdateProduct() {
+    openDialog(product: Product) {
+      this.state = product;
+    },
+
+    updateProduct(productId: number) {
       this.v$.$validate();
+      console.log(this.v$.$error);
       if (!this.v$.$error) {
         const product: UpdateProduct = {
-          product_id: this.state.product_id,
           product_name: this.state.product_name,
           category: this.state.category,
           brand: this.state.brand,
           price: this.state.price,
           stock: this.state.stock,
-          market_id: this.state.market_id,
           status: this.state.status,
         };
 
-        ProductDataService.update(this.product_id, product)
+        ProductDataService.update(productId, product)
           .then((response: any) => {
             console.log(response);
           })
@@ -249,53 +253,23 @@ export default defineComponent({
       }
     },
 
-    CreateProduct() {
+    createProduct() {
       this.router.push({ name: "CreateProduct" });
     },
 
-    // getDisplayProduct(products: {
-    //   id: any;
-    //   product_name: string;
-    //   category: string;
-    //   price: number;
-    //   stock: number;
-    // }) {
-    //   return {
-    //     id: products.id,
-    //     product_name:
-    //       products.product_name.length > 30
-    //         ? products.product_name.substr(0, 30) + "..."
-    //         : products.product_name,
-    //     category:
-    //       products.category.length > 30
-    //         ? products.category.substr(0, 30) + "..."
-    //         : products.category,
-    //     price: products.price,
-    //     stock: products.stock,
-    //   };
-    // },
-    // retrieveProductList() {
-    //     ProductDataService.getAll()
-    //       .then((response) => {
-    //     this.products = response.data.map(this.getDisplayProduct);
-    //     console.log(response.data);
-    //     })
-    //     .catch((e) => {
-    //       console.log(e);
-    //     });
-    // },
+    deleteProduct(productId: number) {
+      ProductDataService.delete(productId)
+        .then((response: any) => {
+          console.log(response);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    },
+  },
 
-    deleteProduct() {},
-    // deleteProduct() {
-    //     ProductDataService.delete(this.product.product_id)
-    //     .then((response) => {
-    //       console.log(response.data);
-    //       this.router.push({name: 'product'})
-    //     })
-    //     .catch((e) => {
-    //       console.log(e);
-    //     });
-    // },
+  mounted() {
+    this.getProducts();
   },
 });
 </script>
