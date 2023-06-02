@@ -39,11 +39,11 @@
                         <span class="headline">Order Details</span>
                     </v-card-title>
                     <v-card-text>
-                        <p>payment_method: {{ BuyerselectedOrder && BuyerselectedOrder.payment_method }}</p>
-                        <p>shipping_address: {{ BuyerselectedOrder && BuyerselectedOrder.shipping_address }}</p>
-                        <p>mode_of_transport: {{ BuyerselectedOrder && BuyerselectedOrder.mode_of_transport }}</p>
-                        <p>create_time: {{ BuyerselectedOrder && BuyerselectedOrder.create_time }}</p>
-                        <p>last_modified_time: {{ BuyerselectedOrder && BuyerselectedOrder.last_modified_time }}</p>
+                        <p>Payment Method: {{ BuyerselectedOrder && BuyerselectedOrder.payment_method }}</p>
+                        <p>Shipping Address: {{ BuyerselectedOrder && BuyerselectedOrder.shipping_address }}</p>
+                        <p>Transport: {{ BuyerselectedOrder && BuyerselectedOrder.mode_of_transport }}</p>
+                        <p>Create Time: {{ BuyerselectedOrder && BuyerselectedOrder.create_time }}</p>
+                        <p>Last Modified Time: {{ BuyerselectedOrder && BuyerselectedOrder.last_modified_time }}</p>
                     </v-card-text>
                     <v-card-actions>
                         <v-btn color="tan" text @click="closeBuyerDetails">Close</v-btn>
@@ -57,9 +57,9 @@
                     <div class="order-sellerdetails">
                         <div class="left-sellersection">
                             <p>Consignee Information</p>
-                            <p>consignee: {{ order.consignee }}</p>
+                            <p>Consignee: {{ order.consignee }}</p>
                             <p>Shipping Address: {{ order.shipping_address }}</p>
-                            <p>phone: {{ order.phone }}</p>
+                            <p>Phone: {{ order.phone }}</p>
                         </div>
                         <div class="center-sellersection">
                             <p>Product Information</p>
@@ -69,7 +69,7 @@
                         </div>
                         <div class="right-sellersection">
                             <v-btn @click="showSellerDetails(order)" color="tan" small>
-                                Details
+                                DetailS
                             </v-btn>
                             &nbsp;
                             <v-btn @click='deletSeller(order)' color="tan">
@@ -86,11 +86,11 @@
                     <span class="headline">Order Details</span>
                 </v-card-title>
                 <v-card-text>
-                    <p>create_time: {{ SellerselectedOrder && SellerselectedOrder.create_time }}</p>
-                    <p>last_modified_time: {{ SellerselectedOrder && SellerselectedOrder.last_modified_time }}</p>
+                    <p>Create Time: {{ SellerselectedOrder && SellerselectedOrder.create_time }}</p>
+                    <p>Last Modified Time: {{ SellerselectedOrder && SellerselectedOrder.last_modified_time }}</p>
                     <p>Shipping Address: {{ SellerselectedOrder &&  SellerselectedOrder.shipping_address }}</p>
                     <p>Payment Method: {{ SellerselectedOrder && SellerselectedOrder.payment_method }}</p>
-                    <p>Mode of Transport: {{ SellerselectedOrder && SellerselectedOrder.mode_of_transport }}</p>
+                    <p>Transport: {{ SellerselectedOrder && SellerselectedOrder.mode_of_transport }}</p>
                 </v-card-text>
                 <v-card-actions>
                     <v-btn color="tan" text @click="closeSellerDetails">

@@ -74,10 +74,6 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <!-- 根据用户角色显示订单列表 
-      <v-pagination v-model="currentPage" :total-visible="itemsPerPage" :length="totalPages">
-      </v-pagination>
-    -->
   </div>
 </template>
 
