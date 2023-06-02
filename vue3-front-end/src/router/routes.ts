@@ -79,6 +79,14 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       layout: 'Default'
     }
+  },
+  {
+    path: '/manage/product/create',
+    name: 'CreateProduct',
+    component: () => import('../views/CreateProduct.vue'),
+    meta: {
+      layout: 'Default'
+    }
   }
 ];
 
