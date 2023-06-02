@@ -43,7 +43,7 @@
                         <p>shipping_address: {{ BuyerselectedOrder && BuyerselectedOrder.shipping_address }}</p>
                         <p>mode_of_transport: {{ BuyerselectedOrder && BuyerselectedOrder.mode_of_transport }}</p>
                         <p>create_time: {{ BuyerselectedOrder && BuyerselectedOrder.create_time }}</p>
-                        <p>Last_modified_time: {{ BuyerselectedOrder && BuyerselectedOrder.last_modified_time }}</p>
+                        <p>last_modified_time: {{ BuyerselectedOrder && BuyerselectedOrder.last_modified_time }}</p>
                     </v-card-text>
                     <v-card-actions>
                         <v-btn color="tan" text @click="closeBuyerDetails">Close</v-btn>
@@ -57,9 +57,9 @@
                     <div class="order-sellerdetails">
                         <div class="left-sellersection">
                             <p>Consignee Information</p>
-                            <p>Consignee: {{ order.consignee }}</p>
+                            <p>consignee: {{ order.consignee }}</p>
                             <p>Shipping Address: {{ order.shipping_address }}</p>
-                            <p>Phone: {{ order.phone }}</p>
+                            <p>phone: {{ order.phone }}</p>
                         </div>
                         <div class="center-sellersection">
                             <p>Product Information</p>
@@ -87,7 +87,7 @@
                 </v-card-title>
                 <v-card-text>
                     <p>create_time: {{ SellerselectedOrder && SellerselectedOrder.create_time }}</p>
-                    <p>Last Modified Time: {{ SSellerselectedOrder && SellerselectedOrder.Last_modified_time }}</p>
+                    <p>last_modified_time: {{ SellerselectedOrder && SellerselectedOrder.last_modified_time }}</p>
                     <p>Shipping Address: {{ SellerselectedOrder &&  SellerselectedOrder.shipping_address }}</p>
                     <p>Payment Method: {{ SellerselectedOrder && SellerselectedOrder.payment_method }}</p>
                     <p>Mode of Transport: {{ SellerselectedOrder && SellerselectedOrder.mode_of_transport }}</p>
@@ -147,6 +147,7 @@ export default {
             .get(apiUrl)
             .then((res) => {
                 this.orderInformation = res.data;
+                console.log(res.data);
             })
             .catch((error) => {
                 console.log('Failed to fetch order data.');
@@ -154,6 +155,7 @@ export default {
         },
   
         toggleRole() {
+            console.log("change")
             this.role = this.role === 'Buyer' ? 'Seller' : 'Buyer';
             this.getOrders();
         },
@@ -211,10 +213,6 @@ export default {
         goToPage(pageNumber) {
             this.currentPage = pageNumber;
         },
-        
-        toggleRole() {
-            this.role = this.role === 'Buyer' ? 'Seller' : 'Buyer';
-        }
         
     },
 };

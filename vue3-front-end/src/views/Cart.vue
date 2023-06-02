@@ -106,7 +106,7 @@ export default {
       axios.get('http://localhost:3000/carts')
         .then((res) => {
           this.cartItems = res.data;
-          //console.log(cartItems);
+          console.log(cartItems);
         })
         .catch((error) => {
           console.log("No catch data.");
