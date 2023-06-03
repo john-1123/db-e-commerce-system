@@ -10,6 +10,8 @@ from main.controllers.market import GetAllMarket, GetMarket, CreateMarket, GetMa
 from main.models._db import db
 from main.schemas._ma import ma
 
+from main.controllers.cart_item import AddCartItem, DeleteCartItem, ReviseCartItem, DeleteAllCartItemByMarket, DeleteAllCartItemByMember, GetAllCartByMember
+from main.controllers.order_table import GetOrder, GetAllOrderByMember, GetAllOrderByMarket, CreateOrder, DeleteOrder
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:password@localhost:3306/ecommerce'
@@ -48,6 +50,38 @@ api.add_resource(GetMarketByUser, '/markets/user/<int:id>')
 api.add_resource(CreateMarket, '/markets')
 api.add_resource(UpdateMarket, '/markets/<int:id>')
 api.add_resource(DeleteMarket, '/markets/<int:id>')
+
+
+# cart_item api
+# in json <member_id=,market_id=,product_id=,quntity=>
+# in method <get,post,delete,put>
+# api.add_resource(GetCartItem,'/cart/product')
+api.add_resource(AddCartItem,'/cart/product')
+api.add_resource(DeleteCartItem,'/cart/product')
+api.add_resource(ReviseCartItem,'/cart/product')
+api.add_resource(GetAllCartByMember,'/cart/product/all/member')
+# api.add_resource(GetAllCart,'/cart/product/all/item') #
+# api.add_resource(DeleteAllCartItem,'/cart/product/all') #
+api.add_resource(DeleteAllCartItemByMember,'/cart/product/all/member')
+api.add_resource(DeleteAllCartItemByMarket,'/cart/product/all/market')
+
+# cart api
+# in json <member_id=,market_id=,order_id=>
+# in method <get,post,delete>
+# api.add_resource(GetCart,'/cart')
+# api.add_resource(CreateCart,'/cart')
+# api.add_resource(DeleteCart,'/cart')
+
+# order api
+# in json <order_id=,state=,shipping_address,payment_method,mode_of_transport>
+# in method <get,post,delete>
+api.add_resource(GetOrder,'/order')
+api.add_resource(CreateOrder,'/order')
+api.add_resource(DeleteOrder,'/order')
+api.add_resource(GetAllOrderByMarket,'/order_all_by_market')
+api.add_resource(GetAllOrderByMember,'/order_all_by_member')
+# api.add_resource(UpdateOrder,'/order')
+
 
 with app.app_context():
     db.create_all()
