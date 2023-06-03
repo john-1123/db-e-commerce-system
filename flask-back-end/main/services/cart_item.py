@@ -64,15 +64,11 @@ class CartItemService:
                 "quntity":data['quntity']
             }
 
-    def delete_single(self, data):
-        cart = CartItem.query.filter(CartItem.member_id==data['member_id'],CartItem.market_id==data['market_id'],CartItem.product_id==data['product_id']).first()
+    def delete_single(self, user_id, market_id, product_id):
+        cart = CartItem.query.filter_by(member_id=user_id, market_id=market_id, product_id=product_id).first()
         if cart:
             delete(cart)
-            return {
-                "member_id":data["member_id"],                
-                "market_id":data["market_id"],
-                "product_id":data["product_id"]
-            }
+            return self.cart_schema.jsonify(cart)
         
     def delete_all(self, data):
         cart = CartItem.query.filter(CartItem.member_id==data['member_id'],CartItem.market_id==data['market_id']).all()

@@ -23,8 +23,8 @@ class AddCartItem(Resource):
         return service.create(data=request.json)  
 
 class DeleteCartItem(Resource):
-    def delete(self):
-        return service.delete_single(data=request.json)  
+    def delete(self, user_id, market_id, product_id):
+        return service.delete_single(user_id, market_id, product_id)  
 
 class DeleteAllCartItem(Resource): #by market and member
     def delete(self):

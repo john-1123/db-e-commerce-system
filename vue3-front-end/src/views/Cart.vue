@@ -174,7 +174,17 @@ export default defineComponent({
     },
 
     deleteItem(marketId: number, productId: number) {
-      const userId = 1;
+      const userId = Number(sessionStorage.getItem("user"));
+      if (userId) {
+        CartDataService.delete(userId, marketId, productId)
+          .then((response: any) => {
+            console.log(response.data);
+            this.getCart();
+          })
+          .catch((e: Error) => {
+            console.log(e);
+          });
+      }
     },
 
     buy(marketId: number) {

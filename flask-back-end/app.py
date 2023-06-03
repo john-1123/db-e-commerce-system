@@ -57,9 +57,9 @@ api.add_resource(DeleteMarket, '/markets/<int:id>')
 # in method <get,post,delete,put>
 # api.add_resource(GetCartItem,'/cart/product')
 api.add_resource(AddCartItem, '/cart/product')
-api.add_resource(DeleteCartItem, '/cart/product')
+api.add_resource(DeleteCartItem, '/cart/<int:user_id>/<int:market_id>/<int:product_id>')
 api.add_resource(ReviseCartItem, '/cart/product')
-api.add_resource(GetAllCartByMember, '/cart/member/<int:id>')
+api.add_resource(GetAllCartByMember, '/cart/<int:id>')
 # api.add_resource(DeleteAllCartItem,'/cart/product/all') #
 api.add_resource(DeleteAllCartItemByMember, '/cart/product/all/member')
 api.add_resource(DeleteAllCartItemByMarket, '/cart/product/all/market')
