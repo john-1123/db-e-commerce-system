@@ -1,4 +1,5 @@
 from ._db import db
+from main.models.market import Market
 
 class User(db.Model):
     __tablename__ = 'user'
@@ -10,8 +11,7 @@ class User(db.Model):
     phone = db.Column(db.String(10))
     registered_on = db.Column(db.DateTime, nullable=False)
 
-    # order = db.relationship('Order', backref='user', lazy=True)
-    # cart = db.relationship('Cart', backref='user', lazy=True)
+    market = db.relationship('Market', backref='user', uselist=False)
 
     def __init__(self, email, password, username, address, phone, registered_on):
         self.email = email

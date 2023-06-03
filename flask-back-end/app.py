@@ -4,23 +4,19 @@ from flask_migrate import Migrate
 from flask_cors import CORS
 from main.controllers.auth import AuthLogin, AuthSignUp
 from main.controllers.welcome import HelloWorld
-from main.controllers.user import GetAllUser, GetUser, UpdateUser, DeleteUser,CreateUser
+from main.controllers.user import GetAllUser, GetUser, UpdateUser, DeleteUser
+from main.controllers.product import GetAllProduct, GetProduct, CreateProduct, GetProductByMarket, UpdateProduct, DeleteProduct
+from main.controllers.market import GetAllMarket, GetMarket, CreateMarket, GetMarketByUser, UpdateMarket, DeleteMarket
+from main.models._db import db
+from main.schemas._ma import ma
+
 from main.controllers.cart_item import GetCartItem,AddCartItem,DeleteCartItem,ReviseCartItem,GetAllCart,DeleteAllCartItem,DeleteAllCartItemByMarket,DeleteAllCartItemByMember,GetAllCartByMember
 # from main.controllers.cart import GetCart,CreateCart,DeleteCart
 # from main.controllers.order_table import GetOrder,UpdateOrder
 from main.controllers.order_table import GetOrder,GetAllOrderByMember,GetAllOrderByMarket,CreateOrder,DeleteOrder
-from main.models._db import db
-from main.schemas._ma import ma
-
-passwd=""
-with open(r"C:\Users\User\Desktop\passwd.txt",mode="r") as file:
-    for i in file:
-        passwd=i
-
-# print("passwd=",passwd)
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:'+passwd+'@localhost:3306/ecommerce'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:password@localhost:3306/ecommerce'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
@@ -32,19 +28,31 @@ migrate = Migrate(app, db)
 
 # api
 api.add_resource(HelloWorld, '/')
-
 # user api
-#in json <email ,password ,username,address ,phone >
-
 api.add_resource(GetAllUser, '/users')
 api.add_resource(GetUser, '/users/<int:id>')
 api.add_resource(UpdateUser, '/users/<int:id>')
 api.add_resource(DeleteUser, '/users/<int:id>')
-api.add_resource(CreateUser,'/users')
-
 # auth api
 api.add_resource(AuthLogin, '/login')
 api.add_resource(AuthSignUp, '/signup')
+
+# product api
+api.add_resource(GetAllProduct, '/products')
+api.add_resource(GetProduct, '/products/<int:id>')
+api.add_resource(GetProductByMarket, "/products/market/<int:id>")
+api.add_resource(CreateProduct, '/products')
+api.add_resource(UpdateProduct, '/products/<int:id>')
+api.add_resource(DeleteProduct, '/products/<int:id>')
+
+# market api
+api.add_resource(GetAllMarket, '/markets')
+api.add_resource(GetMarket, '/markets/<int:id>')
+api.add_resource(GetMarketByUser, '/markets/user/<int:id>')
+api.add_resource(CreateMarket, '/markets')
+api.add_resource(UpdateMarket, '/markets/<int:id>')
+api.add_resource(DeleteMarket, '/markets/<int:id>')
+
 
 #cart_item api
 #in json <member_id=,market_id=,product_id=,quntity=>
@@ -76,7 +84,6 @@ api.add_resource(DeleteOrder,'/order')
 api.add_resource(GetAllOrderByMarket,'/order_all_by_market')
 api.add_resource(GetAllOrderByMember,'/order_all_by_member')
 # api.add_resource(UpdateOrder,'/order')
-
 with app.app_context():
     db.create_all()
 
