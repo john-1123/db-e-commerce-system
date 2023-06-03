@@ -54,10 +54,10 @@
 
 <script lang="ts">
 import useValidate from "@vuelidate/core";
+import { email, maxLength, minLength, required } from "@vuelidate/validators";
 import { computed, defineComponent, reactive } from "vue";
-import UserDataService from "../services/UserDataService";
-import { required, email, minLength, maxLength } from "@vuelidate/validators";
 import UpdateUser from "../models/user/update-user";
+import UserDataService from "../services/UserDataService";
 
 export default defineComponent({
   name: "Profile",
@@ -89,17 +89,11 @@ export default defineComponent({
     const user_id = Number(sessionStorage.getItem("user"));
     if (user_id) {
       UserDataService.get(user_id).then((response: any) => {
-        console.log(response);
-        state.username = response["username"];
-        state.email = response["email"];
-        state.password = response["password"];
-        state.address = response["address"];
-        state.phone = response["phone"];
-        // state.username = response["data"]["username"];
-        // state.email = response["data"]['email'];
-        // state.password = response["data"]['password'];
-        // state.address = response["data"]['address'];
-        // state.phone = response["data"]['phone'];
+        state.username = response["data"]["username"];
+        state.email = response["data"]["email"];
+        state.password = response["data"]["password"];
+        state.address = response["data"]["address"];
+        state.phone = response["data"]["phone"];
       });
     }
 
