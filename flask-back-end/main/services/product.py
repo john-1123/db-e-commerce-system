@@ -41,14 +41,12 @@ class ProductService:
 
     def update(self, product_id, data):
         product = Product.query.get(product_id)
-        print(data)
         if product:
             product.product_name = data['product_name'],
             product.category = data['category'],
             product.brand = data['brand'],
             product.price = data['price'],
             product.stock = data['stock'],
-            product.market_id = data['market_id'],
             product.status = data['status']
             save(product)
             return self.product_schema.jsonify(product)

@@ -26,6 +26,4 @@ class DeleteProduct(Resource):
     
 class GetProductByMarket(Resource):
     def get(self, id):
-        products = service.get_all_by_market(market_id=id)
-        print(products)
-        return products
+        return service.get_all_by_market(market_id=id)
