@@ -32,9 +32,10 @@ import useValidate from "@vuelidate/core";
 import { required } from "@vuelidate/validators";
 import { computed, defineComponent, reactive } from "vue";
 import { useRouter } from "vue-router";
-import AuthService from "../services/AuthService";
-import Login from "../models/user/login";
+
 import { useStore } from "vuex";
+import Login from "../../models/user/login";
+import AuthService from "../../services/AuthService";
 
 export default defineComponent({
   name: "sign-up",

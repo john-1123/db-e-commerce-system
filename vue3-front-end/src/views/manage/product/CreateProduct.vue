@@ -60,9 +60,9 @@ import useValidate from "@vuelidate/core";
 import { required } from "@vuelidate/validators";
 import { computed, defineComponent, reactive } from "vue";
 import { useRouter } from "vue-router";
-import { CreateProduct } from "../models/product/create-product";
-import MarketDataService from "../services/MarketDataService";
-import ProductDataService from "../services/ProductDataService";
+import { CreateProduct } from "../../../models/product/create-product";
+import MarketDataService from "../../../services/MarketDataService";
+import ProductDataService from "../../../services/ProductDataService";
 
 export default defineComponent({
   name: "create-product",

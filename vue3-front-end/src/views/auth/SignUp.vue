@@ -73,8 +73,8 @@ import {
 } from "@vuelidate/validators";
 import { computed, defineComponent, reactive } from "vue";
 import { useRouter } from "vue-router";
-import SignUp from "../models/user/signup";
-import AuthService from "../services/AuthService";
+import SignUp from "../../models/user/signup";
+import AuthService from "../../services/AuthService";
 
 export default defineComponent({
   name: "sign-up",

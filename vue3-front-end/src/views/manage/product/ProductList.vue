@@ -135,10 +135,11 @@ import useValidate from "@vuelidate/core";
 import { required } from "@vuelidate/validators";
 import { computed, defineComponent, reactive } from "vue";
 import { useRouter } from "vue-router";
-import Product from "../models/product/product";
-import { UpdateProduct } from "../models/product/update-prodcut";
-import MarketDataService from "../services/MarketDataService";
-import ProductDataService from "../services/ProductDataService";
+import Product from "../../../models/product/product";
+import { UpdateProduct } from "../../../models/product/update-prodcut";
+import MarketDataService from "../../../services/MarketDataService";
+import ProductDataService from "../../../services/ProductDataService";
+
 
 export default defineComponent({
   name: "ManageProduct",
