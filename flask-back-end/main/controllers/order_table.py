@@ -17,13 +17,13 @@ class CreateOrder(Resource):
 #         return service.update(data=request.json)
 
 class DeleteOrder(Resource):
-    def delete(self):
-        return service.delete(data=request.json)
+    def delete(self, id):
+        return service.delete(order_id=id)
     
 class GetAllOrderByMarket(Resource):
-    def get(self):
-        return service.get_all_order_by_market(data=request.json) ### 改request.
+    def get(self, id):
+        return service.get_all_order_by_market(market_id=id) ### 改request.
 
 class GetAllOrderByMember(Resource):
-    def get(self):
-        return service.get_all_order_by_member(data=request.json)
+    def get(self, id):
+        return service.get_all_order_by_member(user_id=id)

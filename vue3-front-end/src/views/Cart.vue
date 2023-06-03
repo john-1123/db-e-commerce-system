@@ -247,7 +247,7 @@ export default defineComponent({
           const order: CreateOrder = {
             member_id: userId,
             market_id: this.orderItemList[0].product.market_id,
-            state: "配送中",
+            state: "待確認",
             shipping_address: this.state.shippingAddress,
             consignee: this.state.consignee,
             payment_method: this.state.paymentMethod,

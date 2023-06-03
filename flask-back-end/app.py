@@ -76,9 +76,9 @@ api.add_resource(DeleteAllCartItemByMarket, '/cart/product/all/market')
 # in method <get,post,delete>
 api.add_resource(GetOrder, '/order')
 api.add_resource(CreateOrder, '/order')
-api.add_resource(DeleteOrder, '/order')
-api.add_resource(GetAllOrderByMarket, '/order_all_by_market')
-api.add_resource(GetAllOrderByMember, '/order_all_by_member')
+api.add_resource(DeleteOrder, '/order/<int:id>')
+api.add_resource(GetAllOrderByMarket, '/order/market/<int:id>')
+api.add_resource(GetAllOrderByMember, '/order/user/<int:id>')
 # api.add_resource(UpdateOrder,'/order')
 
 
