@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <h1 class="text-center ma-3">[Management] Order List</h1>
+    <v-card-title> [Management] Order List </v-card-title>
     <v-table>
       <thead>
         <tr>
