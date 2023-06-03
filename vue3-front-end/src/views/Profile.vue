@@ -49,6 +49,19 @@
         <v-btn @click="submitForm">Update</v-btn>
       </v-form>
     </v-card>
+    <v-dialog v-model="dialog" max-width="500">
+      <v-card>
+        <v-card-title> 提示訊息 </v-card-title>
+        <v-card-text>
+          {{ message }}
+        </v-card-text>
+        <v-card-actions>
+          <v-row class="justify-end">
+            <v-btn class="mx-3" @click="close">close</v-btn>
+          </v-row>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -102,6 +115,8 @@ export default defineComponent({
   data() {
     return {
       passwordShow: false,
+      dialog: false,
+      message: "",
     };
   },
   methods: {
@@ -115,14 +130,20 @@ export default defineComponent({
           address: this.state.address,
           phone: this.state.phone,
         };
-        // UserDataService.update(this.user_id, user)
-        //   .then((response: any) => {
-        //     console.log(response);
-        //   })
-        //   .catch((e: Error) => {
-        //     console.log(e);
-        //   });
+        UserDataService.update(this.user_id, user)
+          .then((response: any) => {
+            this.message = "Update User Successfully!";
+            this.dialog = true;
+          })
+          .catch((e: Error) => {
+            console.log(e);
+          });
       }
+    },
+
+    close() {
+      this.message = "";
+      this.dialog = false;
     },
   },
 });
