@@ -4,7 +4,12 @@
     <v-row class="mx-3 my-5" v-for="market in getGroupByMarket()">
       <v-col cols="12" class="d-flex">
         <h2>{{ getMarketName(market[0].market_id) }}</h2>
-        <v-btn class="mx-5" color="orange-lighten-4">下訂單</v-btn>
+        <v-btn
+          class="mx-5"
+          color="orange-lighten-4"
+          @click="buyOrder(market[0].market_id)"
+          >下訂單</v-btn
+        >
       </v-col>
       <v-col>
         <v-table>
@@ -43,67 +48,105 @@
       </v-col>
     </v-row>
   </v-container>
-  <!-- <v-dialog v-model="BuyshowDialog" max-width="500">
-      <v-card>
-        <v-card-title>
-          <span class='headline'>Order Details</span>
-        </v-card-title>
-        <v-card-text>
-          <div v-for="(order, productID) in buyshoworder" :key="productID">
-            <p>
-              Product : {{ BuyshowDialog && order.product_name }}
-              &nbsp;
-              &nbsp;
-              &nbsp;
-              <p>Price: {{ BuyshowDialog && order.price }}
-              Quantity:<input type="number" v-model="order.quantity" min="0"></p>
-            </p>
-            <br>
-          </div>
-          <v-text-field v-model="consignee" label="Consignee"></v-text-field>
-          <br>
-          <v-text-field v-model="shippingAddress" label="Shipping Address"></v-text-field>
-          <br>
-          <v-text-field v-model="mode_of_transport" label="Transport"></v-text-field>
-          <br>
-          <v-text-field v-model="payment" label="Payment method"></v-text-field>
-        </v-card-text>
-        <v-card-actions>
-          <v-btn color="tan" @click="submitOrder">
-            Submit
-          </v-btn>
-          <v-btn color="tan" @click="closeBuy">
-            Close
-          </v-btn>
+  <v-dialog v-model="dialog" max-width="500">
+    <v-card>
+      <v-card-title>Order Details</v-card-title>
+      <v-card-text>
+        <v-card-item v-for="item in orderItemList">
+          {{ itemLine(item) }}
+        </v-card-item>
+
+        <v-text-field
+          class="my-3"
+          v-model="state.consignee"
+          label="Consignee"
+          :error-messages="v$.consignee.$errors.map((e: any) => e.$message)"
+          @input="v$.consignee.$touch"
+          @blur="v$.consignee.$touch"
+        ></v-text-field>
+
+        <v-text-field
+          class="my-3"
+          v-model="state.shippingAddress"
+          label="Shipping Address"
+          :error-messages="v$.shippingAddress.$errors.map((e: any) => e.$message)"
+          @input="v$.shippingAddress.$touch"
+          @blur="v$.shippingAddress.$touch"
+        ></v-text-field>
+
+        <v-select
+          class="my-3"
+          v-model="state.modeOfTransport"
+          :items="transportList"
+          label="Mode of Transport"
+        ></v-select>
+
+        <v-select
+          class="my-3"
+          v-model="state.paymentMethod"
+          :items="paymentList"
+          label="Payment method"
+        ></v-select>
+
+        <v-card-actions class="justify-space-between">
+          <v-btn color="blue-lighten-1" @click="onSubmit">Submit</v-btn>
+          <v-btn @click="close">Close</v-btn>
         </v-card-actions>
-      </v-card>
-    </v-dialog> -->
+      </v-card-text>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import useValidate from "@vuelidate/core";
+import { required } from "@vuelidate/validators";
+import { computed, defineComponent, reactive } from "vue";
 import CartItem from "../models/cart/CartItem";
 import Cart from "../models/cart/cart";
+import { TransportMode } from "../models/cart/transport-mode";
 import CartDataService from "../services/CartDataService";
 import MarketDataService from "../services/MarketDataService";
 import ProductDataService from "../services/ProductDataService";
+import { PaymentMode } from "../models/cart/payment-mode";
+import CreateOrder from "../models/order/create-order";
+import OrderDataService from "../services/OrderDataService";
+import { useRouter } from "vue-router";
 
 export default defineComponent({
-  setup() {},
+  setup() {
+    const router = useRouter();
+
+    const state = reactive({
+      consignee: "",
+      shippingAddress: "",
+      modeOfTransport: TransportMode.SevenEleven,
+      paymentMethod: PaymentMode.Visa,
+    });
+
+    const rules = computed(() => {
+      return {
+        consignee: { required },
+        shippingAddress: { required },
+        modeOfTransport: { required },
+        paymentMethod: { required },
+      };
+    });
+
+    const transportList = Object.values(TransportMode);
+    const paymentList = Object.values(PaymentMode);
+
+    const v$ = useValidate(rules, state);
+
+    return { router, transportList, paymentList, state, v$ };
+  },
 
   data() {
     return {
-      BuyshowDialog: false,
-      buyshoworder: {},
-      deletorder: {},
-      consignee: "",
-      shippingAddress: "",
-      mode_of_transport: "",
-      payment: "",
-
       cartList: [] as Cart[],
       marketMap: new Map<number, string>() as Map<number, string>,
       itemMap: new Map<number, CartItem[]>() as Map<number, CartItem[]>,
+      orderItemList: [] as CartItem[],
+      dialog: false,
     };
   },
 
@@ -187,82 +230,49 @@ export default defineComponent({
       }
     },
 
-    buy(marketId: number) {
-      // this.buyshoworder = {};
-      // for (const item of items) {
-      //   const productID = item.product_id;
-      //   if (!this.buyshoworder[productID]) {
-      //     this.buyshoworder[productID] = {
-      //       product_name: item.product_name,
-      //       price: item.price,
-      //       stock: item.stock,
-      //       quantity: item.quantity,
-      //     };
-      //   }
-      // }
-      // console.log(this.buyshoworder);
-      // this.BuyshowDialog = true;
+    buyOrder(marketId: number) {
+      this.orderItemList = this.itemMap.get(marketId)!;
+      this.dialog = true;
     },
 
-    // submitOrder() {
-    //   if (!this.consignee || !this.shippingAddress || !this.mode_of_transport || !this.payment) {
-    //     console.log("Requirement");
-    //     return;
-    //   }
+    itemLine(item: CartItem) {
+      return `產品: ${item.product.product_name} / 價錢: ${item.product.price} / 數量: ${item.quantity}`;
+    },
 
-    //   for(const [productID, order] of Object.entries(this.buyshoworder)){
-    //     const quantity = parseInt(order.quantity);
-    //     const stock = parseInt(order.stock);
-    //     if (quantity > stock) {
-    //       console.log("Do not buy more.");
-    //       return;
-    //     }
-    //   }
+    onSubmit() {
+      this.v$.$validate();
+      if (!this.v$.$error) {
+        const userId = Number(sessionStorage.getItem("user"));
+        if (userId) {
+          const order: CreateOrder = {
+            member_id: userId,
+            market_id: this.orderItemList[0].product.market_id,
+            state: "配送中",
+            shipping_address: this.state.shippingAddress,
+            consignee: this.state.consignee,
+            payment_method: this.state.paymentMethod,
+            mode_of_transport: this.state.modeOfTransport,
+          };
+          OrderDataService.create(order)
+            .then((response: any) => {
+              console.log(response.data);
+              this.router.push("/orders");
+            })
+            .catch((e: Error) => {
+              console.log(e);
+            });
+        }
+      }
+    },
 
-    //   const orderData = {};
-    //   for (const [productID, order] of Object.entries(this.buyshoworder)) {
-    //     orderData[productID] = {
-    //       product_id: order.product_id,
-    //       price: order.price,
-    //       quantity: order.quantity,
-    //       stock: order.stock,
-    //     }
-    //   }
-
-    //   orderData.consignee = this.consignee;
-    //   orderData.shipping_address = this.shippingAddress;
-    //   orderData.mode_of_transport = this.mode_of_transport;
-    //   orderData.payment_method = this.payment;
-    //   orderData.create_time = new Date().getTime();
-    //   orderData.last_modified_time = new Date().getTime();
-
-    //   this.placeOrder(orderData);
-    //   this.BuyshowDialog = false;
-    //   this.consignee = "";
-    //   this.shippingddress = "";
-    //   this.mode_of_transport = "";
-    //   this.payment = ""
-    // },
-
-    // placeOrder(orderData) {
-    //   axios
-    //     .post("http://localhost:3000/detailorder", orderData)
-    //     .then((res) => {
-    //       console.log("Order placed successfully!");
-    //     })
-    //     .catch((error) => {
-    //       console.log("Error placing the order. Please try again.");
-    //     })
-    // },
-
-    // closeBuy() {
-    //   this.buyshoworder = {};
-    //   this.BuyshowDialog = false;
-    //   this.consignee = "";
-    //   (this.shippingAddress = ""),
-    //     (this.mode_of_transport = ""),
-    //     (this.payment = "");
-    // },
+    close() {
+      this.dialog = false;
+      this.state.consignee = "";
+      this.state.shippingAddress = "";
+      this.state.modeOfTransport = TransportMode.SevenEleven;
+      this.state.paymentMethod = PaymentMode.Visa;
+      this.v$.$reset();
+    },
   },
 
   mounted() {
