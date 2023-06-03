@@ -1,102 +1,111 @@
-import { RouteRecordRaw } from 'vue-router';
+import { RouteRecordRaw } from "vue-router";
 
 function loginGuard() {
-  if(sessionStorage.getItem('user')==null) {
-    return { name: 'SignIn'}
+  if (sessionStorage.getItem("user") == null) {
+    return { name: "SignIn" };
   }
-  return true
+  return true;
 }
 
 const routes: Array<RouteRecordRaw> = [
   {
-    path: '/home',
-    name: 'Home',
-    component: () => import('../views/Home.vue'),
+    path: "/home",
+    name: "Home",
+    component: () => import("../views/Home.vue"),
     meta: {
-      layout: 'Default',
+      layout: "Default",
     },
   },
   {
-    path: '/profile',
-    name: 'Profile',
-    component: () => import('../views/Profile.vue'),
+    path: "/profile",
+    name: "Profile",
+    component: () => import("../views/Profile.vue"),
     beforeEnter: loginGuard,
     meta: {
-      layout: 'Default',
+      layout: "Default",
     },
   },
   {
-    path: '/sign-up',
-    name: 'SignUp',
-    component: () => import('../views/auth/SignUp.vue'),
+    path: "/sign-up",
+    name: "SignUp",
+    component: () => import("../views/auth/SignUp.vue"),
     meta: {
-      layout: 'Default',
-    }
+      layout: "Default",
+    },
   },
   {
-    path: '/sign-in',
-    name: 'SignIn',
-    component: () => import('../views/auth/SignIn.vue'),
+    path: "/sign-in",
+    name: "SignIn",
+    component: () => import("../views/auth/SignIn.vue"),
     meta: {
-      layout: 'Default',
-    }
+      layout: "Default",
+    },
   },
   {
-    path: '/carts',
-    name: 'Cart',
-    component: () => import('../views/Cart.vue'),
+    path: "/carts",
+    name: "Cart",
+    component: () => import("../views/Cart.vue"),
     beforeEnter: loginGuard,
     meta: {
-      layout: 'Default'
-    }
+      layout: "Default",
+    },
   },
   {
-    path: '/orders',
-    name: 'Order',
-    component: () => import('../views/Order.vue'),
+    path: "/order",
+    name: "Order",
+    component: () => import("../views/Order.vue"),
     beforeEnter: loginGuard,
     meta: {
-      layout: 'Default'
-    }
+      layout: "Default",
+    },
   },
   {
-    path: '/market',
-    name: 'Market',
-    component: () => import('../views/Market.vue'),
+    path: "/manage/order",
+    name: "ManageOrder",
+    component: () => import("../views/manage/order/OrderList.vue"),
     beforeEnter: loginGuard,
     meta: {
-      layout: 'Default'
-    }
+      layout: "Default",
+    },
   },
   {
-    path: '/',
-    name: 'redirect',
-    redirect: '/home'
-  },
-  {
-    path: '/product/detail',
-    name: 'ProductDetail',
-    component: () => import('../views/ProductDetail.vue'),
+    path: "/market",
+    name: "Market",
+    component: () => import("../views/Market.vue"),
+    beforeEnter: loginGuard,
     meta: {
-      layout: 'Default'
-    }
+      layout: "Default",
+    },
   },
   {
-    path: '/manage/product',
-    name: 'ManageProduct',
-    component: () => import('../views/manage/product/ProductList.vue'),
+    path: "/product",
+    name: "Product",
+    component: () => import("../views/ProductDetail.vue"),
     meta: {
-      layout: 'Default'
-    }
+      layout: "Default",
+    },
   },
   {
-    path: '/manage/product/create',
-    name: 'CreateProduct',
-    component: () => import('../views/manage/product/CreateProduct.vue'),
+    path: "/manage/product",
+    name: "ManageProduct",
+    component: () => import("../views/manage/product/ProductList.vue"),
     meta: {
-      layout: 'Default'
-    }
-  }
+      layout: "Default",
+    },
+  },
+  {
+    path: "/manage/product/create",
+    name: "CreateProduct",
+    component: () => import("../views/manage/product/CreateProduct.vue"),
+    meta: {
+      layout: "Default",
+    },
+  },
+  {
+    path: "/",
+    name: "redirect",
+    redirect: "/home",
+  },
 ];
 
 export default routes;

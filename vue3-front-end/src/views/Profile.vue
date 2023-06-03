@@ -49,15 +49,28 @@
         <v-btn @click="submitForm">Update</v-btn>
       </v-form>
     </v-card>
+    <v-dialog v-model="dialog" max-width="500">
+      <v-card>
+        <v-card-title> 提示訊息 </v-card-title>
+        <v-card-text>
+          {{ message }}
+        </v-card-text>
+        <v-card-actions>
+          <v-row class="justify-end">
+            <v-btn class="mx-3" @click="close">close</v-btn>
+          </v-row>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
 <script lang="ts">
 import useValidate from "@vuelidate/core";
+import { email, maxLength, minLength, required } from "@vuelidate/validators";
 import { computed, defineComponent, reactive } from "vue";
-import UserDataService from "../services/UserDataService";
-import { required, email, minLength, maxLength } from "@vuelidate/validators";
 import UpdateUser from "../models/user/update-user";
+import UserDataService from "../services/UserDataService";
 
 export default defineComponent({
   name: "Profile",
@@ -89,17 +102,11 @@ export default defineComponent({
     const user_id = Number(sessionStorage.getItem("user"));
     if (user_id) {
       UserDataService.get(user_id).then((response: any) => {
-        console.log(response);
-        state.username = response["username"];
-        state.email = response["email"];
-        state.password = response["password"];
-        state.address = response["address"];
-        state.phone = response["phone"];
-        // state.username = response["data"]["username"];
-        // state.email = response["data"]['email'];
-        // state.password = response["data"]['password'];
-        // state.address = response["data"]['address'];
-        // state.phone = response["data"]['phone'];
+        state.username = response["data"]["username"];
+        state.email = response["data"]["email"];
+        state.password = response["data"]["password"];
+        state.address = response["data"]["address"];
+        state.phone = response["data"]["phone"];
       });
     }
 
@@ -108,6 +115,8 @@ export default defineComponent({
   data() {
     return {
       passwordShow: false,
+      dialog: false,
+      message: "",
     };
   },
   methods: {
@@ -121,14 +130,20 @@ export default defineComponent({
           address: this.state.address,
           phone: this.state.phone,
         };
-        // UserDataService.update(this.user_id, user)
-        //   .then((response: any) => {
-        //     console.log(response);
-        //   })
-        //   .catch((e: Error) => {
-        //     console.log(e);
-        //   });
+        UserDataService.update(this.user_id, user)
+          .then((response: any) => {
+            this.message = "Update User Successfully!";
+            this.dialog = true;
+          })
+          .catch((e: Error) => {
+            console.log(e);
+          });
       }
+    },
+
+    close() {
+      this.message = "";
+      this.dialog = false;
     },
   },
 });

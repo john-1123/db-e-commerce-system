@@ -1,106 +1,62 @@
 <template>
-  <div>
-    <v-container>
-      <h2>/Product Detail/</h2>
-      <v-card class="mx-auto" max-width="1000" variant="outlined">
-        <v-card-item>
-          <div>
-            <v-list>
-              <v-list-item class="list-item-spacing">
-                <div class="text-body-2 font-weight-bold">[Product Name]</div>
-                <div class="text-h6 mb-1">{{ productList[2].product_name }}</div>
-              </v-list-item>
-              <v-spacer></v-spacer>
-              <v-list-item class="list-item-spacing">
-                <div class="text-body-2 font-weight-bold">[Category]</div>
-                <div class="text-h6 mb-1">{{ productList[2].category }}</div>
-              </v-list-item>
-              <v-list-item class="list-item-spacing">
-                <div class="text-body-2 font-weight-bold">[Brand]</div>
-                <div class="text-h6 mb-1">{{ productList[2].brand }}</div>
-              </v-list-item>
-              <v-list-item class="list-item-spacing">
-                <div class="text-body-2 font-weight-bold">[Price]</div>
-                <div class="text-h6 mb-1">
-                  NTD$ {{ productList[2].price.toLocaleString("zh-TW") }}
-                </div>
-              </v-list-item>
-            </v-list>
-          </div>
-        </v-card-item>
-        <!-- <v-card-actions>
-          <v-btn variant="outlined" @click="addCart()"> 加入購物車 </v-btn>
-        </v-card-actions> -->
-        <!-- <v-card-actions>
-          <v-select
-            v-model="quantity"
-            :items="quantityOptions"
-            label="數量"
-          ></v-select>
-          <v-btn variant="outlined" @click="addCart()">加入購物車</v-btn>
-        </v-card-actions> -->
-      </v-card>
-    </v-container>
-  </div>
+  <v-container>
+    <h2>Product Detail</h2>
+    {{ product.product_name }}
+  </v-container>
 </template>
-
 <script lang="ts">
-import useValidate from "@vuelidate/core";
-import { required } from "@vuelidate/validators";
-import { useRouter } from "vue-router";
-import { computed, defineComponent, reactive, ref } from "vue";
+import { defineComponent } from "vue";
+import { useRoute } from "vue-router";
+import Product from "../models/product/product";
 import ProductDataService from "../services/ProductDataService";
-import { AddToCart } from "../models/user/product";
-import Product from "../models/user/product";
+import AddtoCart from "../models/cart/add-to-cart";
+import CartDataService from "../services/CartDataService";
 
 export default defineComponent({
-  name: "ManageProduct",
   setup() {
-    const router = useRouter();
-    const productList = reactive<Product[]>([]);
-
-    // const currentProduct = {} as Product;
-    // const quantity = ref(1);
-    // const quantityOptions = [1, 2, 3, 4, 5];
-    // const product_id = 1;
-
-    // const currentProduct = reactive({
-    //   quantity: 1,
-    // } as AddToCart);
-
+    const route = useRoute();
+    return { route };
+  },
+  data() {
     return {
-      router,
-      productList,
-      // quantity,
-      // quantityOptions,
-      // currentProduct,
-      // product_id,
+      product: {} as Product,
     };
   },
-  methods: {
 
-    // addCart() {
-    //   const data: AddToCart = {
-    //     product_id: this.currentProduct.product_id,
-    //     market_id: this.currentProduct.market_id,
-    //     user_id: this.currentProduct.user_id,
-    //     quantity: this.currentProduct.quantity,
-    //   };
-    //   ProductDataService.ProductToCart(data)
-    //     .then((response: any) => {
-    //       console.log(response);
-    //       this.router.push({ name: 'Cart' });
-    //     })
-    //     .catch((e: Error) => {
-    //       console.log(e);
-    //     });
-    // },
+  methods: {
+    getProduct() {
+      const productId: number = Number(this.route.query.id);
+      ProductDataService.get(productId)
+        .then((response: any) => {
+          this.product = response.data;
+        })
+        .catch((e: Error) => {
+          console.log(e);
+        });
+    },
+
+    addCart(product: Product) {
+      const user_id = Number(sessionStorage.getItem("user"));
+      if (user_id) {
+        const data: AddtoCart = {
+          member_id: user_id,
+          market_id: product.market_id,
+          product_id: product.product_id,
+          quntity: 1,
+        };
+        CartDataService.addToCart(data)
+          .then((response: any) => {
+            console.log(response.data);
+          })
+          .catch((e: Error) => {
+            console.log(e);
+          });
+      }
+    },
+  },
+
+  mounted() {
+    this.getProduct();
   },
 });
 </script>
-
-<style scoped>
-.list-item-spacing {
-  margin-bottom: 16px;
-}
-</style>

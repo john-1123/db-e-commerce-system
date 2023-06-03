@@ -20,13 +20,13 @@ class OrderService:
         else: 
             return self.order_schema.jsonify(order)
     
-    def get_all_order_by_market(self, data):
-        cart = Order_Table.query.filter(Order_Table.market_id==data['market_id']).all()
-        return self.orders_schema.jsonify(cart)
+    def get_all_order_by_market(self, market_id):
+        order_list = Order_Table.query.filter_by(market_id=market_id).all()
+        return self.orders_schema.jsonify(order_list)
 
-    def get_all_order_by_member(self, data):
-        cart = Order_Table.query.filter(Order_Table.member_id==data['member_id']).all()
-        return self.orders_schema.jsonify(cart)
+    def get_all_order_by_member(self, user_id):
+        order_list = Order_Table.query.filter_by(member_id=user_id).all()
+        return self.orders_schema.jsonify(order_list)
 
     def create(self, data):
 
@@ -97,8 +97,8 @@ class OrderService:
     #         save(order)
     #         return self.order_schema.jsonify(order)
 
-    def delete(self,data):
-        order = Order_Table.query.filter(Order_Table.order_id==data['order_id']).first()
-        if order !=None:
+    def delete(self, order_id):
+        order = Order_Table.query.filter_by(order_id=order_id).first()
+        if order:
             delete(order)
             return self.order_schema.jsonify(order)

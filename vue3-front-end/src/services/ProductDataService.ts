@@ -1,5 +1,5 @@
 import http from "../http-common";
-import AddtoCart from "../models/product/add-product-cart";
+import AddtoCart from "../models/cart/add-to-cart";
 import { CreateProduct } from "../models/product/create-product";
 import { UpdateProduct } from "../models/product/update-prodcut";
 

@@ -56,14 +56,13 @@ api.add_resource(DeleteMarket, '/markets/<int:id>')
 # in json <member_id=,market_id=,product_id=,quntity=>
 # in method <get,post,delete,put>
 # api.add_resource(GetCartItem,'/cart/product')
-api.add_resource(AddCartItem,'/cart/product')
-api.add_resource(DeleteCartItem,'/cart/product')
-api.add_resource(ReviseCartItem,'/cart/product')
-api.add_resource(GetAllCartByMember,'/cart/product/all/member')
-# api.add_resource(GetAllCart,'/cart/product/all/item') #
+api.add_resource(AddCartItem, '/cart/product')
+api.add_resource(DeleteCartItem, '/cart/<int:user_id>/<int:market_id>/<int:product_id>')
+api.add_resource(ReviseCartItem, '/cart/product')
+api.add_resource(GetAllCartByMember, '/cart/<int:id>')
 # api.add_resource(DeleteAllCartItem,'/cart/product/all') #
-api.add_resource(DeleteAllCartItemByMember,'/cart/product/all/member')
-api.add_resource(DeleteAllCartItemByMarket,'/cart/product/all/market')
+api.add_resource(DeleteAllCartItemByMember, '/cart/product/all/member')
+api.add_resource(DeleteAllCartItemByMarket, '/cart/product/all/market')
 
 # cart api
 # in json <member_id=,market_id=,order_id=>
@@ -75,11 +74,11 @@ api.add_resource(DeleteAllCartItemByMarket,'/cart/product/all/market')
 # order api
 # in json <order_id=,state=,shipping_address,payment_method,mode_of_transport>
 # in method <get,post,delete>
-api.add_resource(GetOrder,'/order')
-api.add_resource(CreateOrder,'/order')
-api.add_resource(DeleteOrder,'/order')
-api.add_resource(GetAllOrderByMarket,'/order_all_by_market')
-api.add_resource(GetAllOrderByMember,'/order_all_by_member')
+api.add_resource(GetOrder, '/order')
+api.add_resource(CreateOrder, '/order')
+api.add_resource(DeleteOrder, '/order/<int:id>')
+api.add_resource(GetAllOrderByMarket, '/order/market/<int:id>')
+api.add_resource(GetAllOrderByMember, '/order/user/<int:id>')
 # api.add_resource(UpdateOrder,'/order')
 
 

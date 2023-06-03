@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <h1 class="text-center ma-3">Order List</h1>
+    <v-card-title> [Management] Order List </v-card-title>
     <v-table>
       <thead>
         <tr>
@@ -64,8 +64,9 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import OrderDataService from "../services/OrderDataService";
-import Order from "../models/order/order";
+import Order from "../../../models/order/order";
+import MarketDataService from "../../../services/MarketDataService";
+import OrderDataService from "../../../services/OrderDataService";
 
 export default defineComponent({
   data() {
@@ -84,14 +85,16 @@ export default defineComponent({
     getOrders() {
       const userId = Number(sessionStorage.getItem("user"));
       if (userId) {
-        OrderDataService.getByUser(userId)
-          .then((response: any) => {
-            console.log(response.data);
-            this.orderList = response.data;
-          })
-          .catch((e: Error) => {
-            console.log(e);
-          });
+        MarketDataService.getMarketByUser(userId).then((response: any) => {
+          const market_id = response.data.market_id;
+          OrderDataService.getByMarket(market_id)
+            .then((response: any) => {
+              this.orderList = response.data;
+            })
+            .catch((e: Error) => {
+              console.log(e);
+            });
+        });
       }
     },
 

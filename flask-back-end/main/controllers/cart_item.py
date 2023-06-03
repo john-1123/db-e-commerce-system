@@ -11,8 +11,8 @@ class GetAllCart(Resource):
         return service.get_all()
     
 class GetAllCartByMember(Resource):
-    def get(self):
-        return service.get_all_by_member(data=request.json)
+    def get(self, id):
+        return service.get_all_by_member(member_id=id)
 
 class GetCartItem(Resource):
     def get(self):
@@ -23,8 +23,8 @@ class AddCartItem(Resource):
         return service.create(data=request.json)  
 
 class DeleteCartItem(Resource):
-    def delete(self):
-        return service.delete_single(data=request.json)  
+    def delete(self, user_id, market_id, product_id):
+        return service.delete_single(user_id, market_id, product_id)  
 
 class DeleteAllCartItem(Resource): #by market and member
     def delete(self):
