@@ -39,3 +39,7 @@ class MarketService:
         if market:
             delete(market)
             return market_id
+        
+    def get_market_by_user(self, user_id):
+        market = Market.query.filter_by(user_id=user_id).first()
+        return self.market_schema.jsonify(market)

@@ -9,8 +9,8 @@ class Product(db.Model):
     brand = db.Column(db.String(20), nullable=False)
     price = db.Column(db.Integer, nullable=False)
     stock = db.Column(db.Integer, nullable=False)
-    market_id = db.Column(db.Integer, db.ForeignKey("market.market_id"), nullable=False)
     status = db.Column(db.Boolean, nullable = False)
+    market_id = db.Column(db.Integer, db.ForeignKey("market.market_id"), nullable=False)
     # cart_item = db.relationship('cart_item', backref='product')
 
     def __init__(self, product_name, category, brand, price, stock, market_id, status):

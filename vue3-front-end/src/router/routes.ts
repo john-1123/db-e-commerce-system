@@ -11,7 +11,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/home',
     name: 'Home',
-    component: () => import(/* webpackChunkName: "home" */ '../views/Home.vue'),
+    component: () => import('../views/Home.vue'),
     meta: {
       layout: 'Default',
     },
@@ -19,7 +19,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/profile',
     name: 'Profile',
-    component: () => import(/* webpackChunkName: "profile" */ '../views/Profile.vue'),
+    component: () => import('../views/Profile.vue'),
     beforeEnter: loginGuard,
     meta: {
       layout: 'Default',
@@ -28,7 +28,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/sign-up',
     name: 'SignUp',
-    component: () => import('../views/SignUp.vue'),
+    component: () => import('../views/auth/SignUp.vue'),
     meta: {
       layout: 'Default',
     }
@@ -36,7 +36,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/sign-in',
     name: 'SignIn',
-    component: () => import('../views/SignIn.vue'),
+    component: () => import('../views/auth/SignIn.vue'),
     meta: {
       layout: 'Default',
     }
@@ -63,6 +63,30 @@ const routes: Array<RouteRecordRaw> = [
     path: '/',
     name: 'redirect',
     redirect: '/home'
+  },
+  {
+    path: '/product/detail',
+    name: 'ProductDetail',
+    component: () => import('../views/ProductDetail.vue'),
+    meta: {
+      layout: 'Default'
+    }
+  },
+  {
+    path: '/manage/product',
+    name: 'ManageProduct',
+    component: () => import('../views/manage/product/ProductList.vue'),
+    meta: {
+      layout: 'Default'
+    }
+  },
+  {
+    path: '/manage/product/create',
+    name: 'CreateProduct',
+    component: () => import('../views/manage/product/CreateProduct.vue'),
+    meta: {
+      layout: 'Default'
+    }
   }
 ];
 

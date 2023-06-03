@@ -1,7 +1,9 @@
-from main.models._db import save, delete
 from flask import jsonify
+
+from main.models._db import delete, save
 from main.models.product import Product
 from main.schemas.product import ProductSchema
+
 # import datetime
 
 class ProductService:
@@ -32,6 +34,10 @@ class ProductService:
 
             save(new_product)
             return self.product_schema.jsonify(new_product)
+    
+    def get_all_by_market(self, market_id):
+        products = Product.query.filter_by(market_id=market_id)
+        return self.products_schema.jsonify(products)
 
     def update(self, product_id, data):
         product = Product.query.get(product_id)
@@ -41,7 +47,6 @@ class ProductService:
             product.brand = data['brand'],
             product.price = data['price'],
             product.stock = data['stock'],
-            product.market_id = data['market_id'],
             product.status = data['status']
             save(product)
             return self.product_schema.jsonify(product)

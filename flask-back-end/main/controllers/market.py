@@ -23,3 +23,7 @@ class UpdateMarket(Resource):
 class DeleteMarket(Resource):
     def delete(self, id):
         return service.delete(market_id=id)
+    
+class GetMarketByUser(Resource):
+    def get(self, id):
+        return service.get_market_by_user(user_id=id)
