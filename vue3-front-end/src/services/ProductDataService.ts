@@ -5,7 +5,7 @@ import { UpdateProduct } from "../models/product/update-prodcut";
 
 class ProductDataService {
   getAll() {
-    return http.get("/products/");
+    return http.get("/products");
   }
 
   get(productId: number) {
