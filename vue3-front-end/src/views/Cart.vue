@@ -101,7 +101,7 @@
 import useValidate from "@vuelidate/core";
 import { required } from "@vuelidate/validators";
 import { computed, defineComponent, reactive } from "vue";
-import CartItem from "../models/cart/CartItem";
+import CartItem from "../models/cart/cart-item";
 import Cart from "../models/cart/cart";
 import { TransportMode } from "../models/cart/transport-mode";
 import CartDataService from "../services/CartDataService";
@@ -256,7 +256,7 @@ export default defineComponent({
           OrderDataService.create(order)
             .then((response: any) => {
               console.log(response.data);
-              this.router.push("/orders");
+              this.router.push("/order");
             })
             .catch((e: Error) => {
               console.log(e);
