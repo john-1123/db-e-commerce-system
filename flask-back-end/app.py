@@ -14,7 +14,7 @@ from main.controllers.cart_item import AddCartItem, DeleteCartItem, ReviseCartIt
 from main.controllers.order_table import GetOrder, GetAllOrderByMember, GetAllOrderByMarket, CreateOrder, DeleteOrder
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:S111753141@localhost:3306/ecommerce'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:password@localhost:3306/ecommerce'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 cors = CORS(app, resources={r"/api/*": {"origins": "*"}})

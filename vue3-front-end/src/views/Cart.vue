@@ -1,7 +1,7 @@
 <template>
   <div class="cart-container">
     <h1>Cart List</h1>
-    <div v-for="(items, marketName) in cartItemsByMarket" :key="marketName" class="market-container">
+    <!-- <div v-for="(items, marketName) in cartItemsByMarket" :key="marketName" class="market-container">
       <div class="market-header">
         {{ marketName }}
         <div class="action-buttons">
@@ -38,8 +38,8 @@
           </div>
         </div>
       </div>
-    </div>
-    <v-dialog v-model="BuyshowDialog" max-width="500">
+    </div> -->
+    <!-- <v-dialog v-model="BuyshowDialog" max-width="500">
       <v-card>
         <v-card-title>
           <span class='headline'>Order Details</span>
@@ -73,28 +73,28 @@
           </v-btn>
         </v-card-actions>
       </v-card>
-    </v-dialog>
+    </v-dialog> -->
   </div>
 </template>
 
+<script lang="ts">
+import { defineComponent } from "vue";
 
-<script>
-import axios from 'axios';
-import { ref } from 'vue';
+export default defineComponent({
+  setup() {},
 
-export default {
   data() {
-    return { 
+    return {
       cartItems: [],
       BuyshowDialog: false,
       buyshoworder: {},
-      deletorder : {},
+      deletorder: {},
       consignee: "",
       shippingAddress: "",
-      mode_of_transport:"",
-      payment:"",
+      mode_of_transport: "",
+      payment: "",
       //currentPage: 1,
-      //itemsPerPage: 5, 
+      //itemsPerPage: 5,
     };
   },
 
@@ -103,131 +103,132 @@ export default {
     this.getCart();
   },
 
-  methods: { 
-    getCart() {
-      const path = 'http://localhost:3000/carts';
-      axios
-      .get(path)
-      .then((res) => {
-        this.cartItems = res.data;
-        //console.log(cartItems);
-      })
-      .catch((error) => {
-        //console.log("No catch data.");
-      });
-    },
+  methods: {
+    getCart() {},
+    // getCart() {
+    //   const path = "http://localhost:3000/carts";
+    //   axios
+    //     .get(path)
+    //     .then((res) => {
+    //       this.cartItems = res.data;
+    //       //console.log(cartItems);
+    //     })
+    //     .catch((error) => {
+    //       //console.log("No catch data.");
+    //     });
+    // },
 
-    buy(items) {
-      this.buyshoworder = {};
-      for (const item of items) {
-        const productID = item.product_id;
-        if (!this.buyshoworder[productID]) {
-          this.buyshoworder[productID] = {
-            product_name: item.product_name,
-            price: item.price,
-            stock: item.stock,
-            quantity: item.quantity
-          };
-        }
-      }
-      console.log(this.buyshoworder);
-      this.BuyshowDialog = true;
-    },
+    // buy(items) {
+    //   this.buyshoworder = {};
+    //   for (const item of items) {
+    //     const productID = item.product_id;
+    //     if (!this.buyshoworder[productID]) {
+    //       this.buyshoworder[productID] = {
+    //         product_name: item.product_name,
+    //         price: item.price,
+    //         stock: item.stock,
+    //         quantity: item.quantity
+    //       };
+    //     }
+    //   }
+    //   console.log(this.buyshoworder);
+    //   this.BuyshowDialog = true;
+    // },
 
-    submitOrder() {
-      if (!this.consignee || !this.shippingAddress || !this.mode_of_transport || !this.payment) {
-        console.log("Requirement");
-        return;
-      }
+    // submitOrder() {
+    //   if (!this.consignee || !this.shippingAddress || !this.mode_of_transport || !this.payment) {
+    //     console.log("Requirement");
+    //     return;
+    //   }
 
-      for(const [productID, order] of Object.entries(this.buyshoworder)){
-        const quantity = parseInt(order.quantity);
-        const stock = parseInt(order.stock);
-        if (quantity > stock) {
-          console.log("Do not buy more.");
-          return;
-        }
-      }
-      
-      const orderData = {};
-      for (const [productID, order] of Object.entries(this.buyshoworder)) {
-        orderData[productID] = {
-          product_id: order.product_id,
-          price: order.price,
-          quantity: order.quantity,
-          stock: order.stock,
-        }
-      }
+    //   for(const [productID, order] of Object.entries(this.buyshoworder)){
+    //     const quantity = parseInt(order.quantity);
+    //     const stock = parseInt(order.stock);
+    //     if (quantity > stock) {
+    //       console.log("Do not buy more.");
+    //       return;
+    //     }
+    //   }
 
-      orderData.consignee = this.consignee;
-      orderData.shipping_address = this.shippingAddress;
-      orderData.mode_of_transport = this.mode_of_transport;
-      orderData.payment_method = this.payment;
-      orderData.create_time = new Date().getTime();
-      orderData.last_modified_time = new Date().getTime();
-      
-      this.placeOrder(orderData);
-      this.BuyshowDialog = false;
-      this.consignee = ""; 
-      this.shippingddress = "";
-      this.mode_of_transport = "";
-      this.payment = ""
-    },
+    //   const orderData = {};
+    //   for (const [productID, order] of Object.entries(this.buyshoworder)) {
+    //     orderData[productID] = {
+    //       product_id: order.product_id,
+    //       price: order.price,
+    //       quantity: order.quantity,
+    //       stock: order.stock,
+    //     }
+    //   }
 
-    placeOrder(orderData) {
-      axios
-        .post("http://localhost:3000/detailorder", orderData)
-        .then((res) => {
-          console.log("Order placed successfully!");
-        })
-        .catch((error) => {
-          console.log("Error placing the order. Please try again.");
-        })
-    },
+    //   orderData.consignee = this.consignee;
+    //   orderData.shipping_address = this.shippingAddress;
+    //   orderData.mode_of_transport = this.mode_of_transport;
+    //   orderData.payment_method = this.payment;
+    //   orderData.create_time = new Date().getTime();
+    //   orderData.last_modified_time = new Date().getTime();
 
-    closeBuy() {
-      this.buyshoworder = {};
-      this.BuyshowDialog = false;
-      this.consignee = ""; 
-      this.shippingAddress = "",
-      this.mode_of_transport = "",
-      this.payment = ""
-    },
+    //   this.placeOrder(orderData);
+    //   this.BuyshowDialog = false;
+    //   this.consignee = "";
+    //   this.shippingddress = "";
+    //   this.mode_of_transport = "";
+    //   this.payment = ""
+    // },
 
-    delet(items) {
-      const deletorder = {};
-      for (const item of items){
-        const deletmarketID = item.market_id;
-        const deletproductID = item.product_id;
-        deletorder.market_id = this.deletmarketID;
-        deletorder.product_id = this.deletproductID;
-      }
-      axios.post('http://localhost:3000/consignee', deletorder)
-      .then((res) => {
-        console.log('Successful delete data.');
-      })
-      .catch((error) => {
-        console.log('Error delete data.');
-      });
-    },
+    // placeOrder(orderData) {
+    //   axios
+    //     .post("http://localhost:3000/detailorder", orderData)
+    //     .then((res) => {
+    //       console.log("Order placed successfully!");
+    //     })
+    //     .catch((error) => {
+    //       console.log("Error placing the order. Please try again.");
+    //     })
+    // },
+
+    // closeBuy() {
+    //   this.buyshoworder = {};
+    //   this.BuyshowDialog = false;
+    //   this.consignee = "";
+    //   (this.shippingAddress = ""),
+    //     (this.mode_of_transport = ""),
+    //     (this.payment = "");
+    // },
+
+    // delet(items) {
+    //   const deletorder = {};
+    //   for (const item of items){
+    //     const deletmarketID = item.market_id;
+    //     const deletproductID = item.product_id;
+    //     deletorder.market_id = this.deletmarketID;
+    //     deletorder.product_id = this.deletproductID;
+    //   }
+    //   axios.post('http://localhost:3000/consignee', deletorder)
+    //   .then((res) => {
+    //     console.log('Successful delete data.');
+    //   })
+    //   .catch((error) => {
+    //     console.log('Error delete data.');
+    //   });
+    // },
   },
- 
+
   computed: {
-    cartItemsByMarket() {
-      const itemsByMarket = {};
-      for (const item of this.cartItems) {
-        const marketName = item.market_name;
-        if (!itemsByMarket[marketName]) {
-          itemsByMarket[marketName] = [];
-          itemsByMarket[marketName].push(item);
-        }else{
-          itemsByMarket[marketName].push(item);
-        }
-      }
-      return itemsByMarket;
-    },
+    // cartItemsByMarket() {
+    //   const itemsByMarket = {};
+    //   for (const item of this.cartItems) {
+    //     const marketName = item.market_name;
+    //     if (!itemsByMarket[marketName]) {
+    //       itemsByMarket[marketName] = [];
+    //       itemsByMarket[marketName].push(item);
+    //     }else{
+    //       itemsByMarket[marketName].push(item);
+    //     }
+    //   }
+    //   return itemsByMarket;
+    // },
   },
-};
+});
 </script>
 
 <style>
@@ -240,7 +241,7 @@ export default {
 .market-container {
   width: 40%;
   margin: 10px;
-  border: 1px solid rgba(0, 0, 0, 0.2); 
+  border: 1px solid rgba(0, 0, 0, 0.2);
   padding: 10px;
   display: flex;
   justify-content: space-between;
@@ -271,8 +272,8 @@ export default {
 }
 
 .center-section {
-    flex: 1;
-    align-items: center;
+  flex: 1;
+  align-items: center;
 }
 
 .button {
@@ -289,4 +290,3 @@ export default {
   color: #555;
 }
 </style>
-
