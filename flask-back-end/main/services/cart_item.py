@@ -20,17 +20,9 @@ class CartItemService:
             return_list.append(return_dict)
         return return_list
     
-    def get_all_by_member(self,data):
-        cart = CartItem.query.filter(CartItem.member_id==data['member_id']).all()
-        return_list=[]
-        for i in cart:
-            return_dict=dict()
-            return_dict["member_id"]=i.member_id
-            return_dict["market_id"]=i.market_id
-            return_dict["product_id"]=i.product_id
-            return_dict["quntity"]=i.quntity
-            return_list.append(return_dict)
-        return return_list
+    def get_all_by_member(self, member_id):
+        item_list = CartItem.query.filter_by(member_id=member_id).all()
+        return self.carts_schema.jsonify(item_list)
     
     def get(self, data):
         cart = CartItem.query.filter(CartItem.member_id==data['member_id'],CartItem.market_id==data['market_id']).all()

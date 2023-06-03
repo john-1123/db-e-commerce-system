@@ -7,9 +7,9 @@ class CartItem(db.Model):
     product_id = db.Column(db.Integer, db.ForeignKey('product.product_id'),primary_key=True,nullable=False)
     quntity = db.Column(db.Integer, nullable=False)
 
-    def __init__(self,member_id,market_id,product_id,quntity):
-        self.member_id=member_id
-        self.market_id=market_id
-        self.product_id=product_id
-        self.quntity=quntity
+    def __init__(self, member_id, market_id, product_id, quntity):
+        self.member_id = member_id
+        self.market_id = market_id
+        self.product_id = product_id
+        self.quntity = quntity
         

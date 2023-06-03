@@ -1,45 +1,49 @@
 <template>
-  <div class="cart-container">
-    <h1>Cart List</h1>
-    <!-- <div v-for="(items, marketName) in cartItemsByMarket" :key="marketName" class="market-container">
-      <div class="market-header">
-        {{ marketName }}
-        <div class="action-buttons">
-          <p>
-          <br>
-            <v-btn @click="buy(items)" color="tan">
-              GO!BUY!
-            </v-btn>
-          </p>
-          <br>
-          <p>
-            <v-btn @click="delet(items)" color="tan">
-            Delete
-            </v-btn>
-          </p>
-        </div>
-      </div>
-      <div class="market-content">
-        <div v-for="item in items" :key="item.product_id" class="product-item">
-          <div class="product-info">
-            <div class="center-section">
-              <p>
-                Product: {{ item.product_name }}
-                &nbsp;
-                &nbsp;
-                &nbsp;
-                Price: {{ item.price }}
-                &nbsp;
-                &nbsp;
-                &nbsp;
-                Stock: {{ item.stock }}
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div> -->
-    <!-- <v-dialog v-model="BuyshowDialog" max-width="500">
+  <v-container>
+    <h1 class="text-center ma-3">Cart List</h1>
+    <v-row class="mx-3 my-5" v-for="market in getGroupByMarket()">
+      <v-col cols="12" class="d-flex">
+        <h2>{{ getMarketName(market[0].market_id) }}</h2>
+        <v-btn class="mx-5" color="orange-lighten-4">下訂單</v-btn>
+      </v-col>
+      <v-col>
+        <v-table>
+          <thead>
+            <tr>
+              <th>Product Name</th>
+              <th>Category</th>
+              <th>Brand</th>
+              <th>Stock</th>
+              <th>Price</th>
+              <th>Quantity</th>
+              <th>Total</th>
+              <th>Delete</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="item in getProductList(market[0].market_id)">
+              <td>{{ item.product.product_name }}</td>
+              <td>{{ item.product.category }}</td>
+              <td>{{ item.product.brand }}</td>
+              <td>{{ item.product.stock }}</td>
+              <td>NTD$ {{ item.product.price }}</td>
+              <td>{{ item.quantity }}</td>
+              <td>{{ item.product.price * item.quantity }}</td>
+              <td>
+                <v-icon
+                  icon="fa:fas fa-trash"
+                  @click="
+                    deleteItem(item.product.market_id, item.product.product_id)
+                  "
+                ></v-icon>
+              </td>
+            </tr>
+          </tbody>
+        </v-table>
+      </v-col>
+    </v-row>
+  </v-container>
+  <!-- <v-dialog v-model="BuyshowDialog" max-width="500">
       <v-card>
         <v-card-title>
           <span class='headline'>Order Details</span>
@@ -74,18 +78,21 @@
         </v-card-actions>
       </v-card>
     </v-dialog> -->
-  </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import CartItem from "../models/cart/CartItem";
+import Cart from "../models/cart/cart";
+import CartDataService from "../services/CartDataService";
+import MarketDataService from "../services/MarketDataService";
+import ProductDataService from "../services/ProductDataService";
 
 export default defineComponent({
   setup() {},
 
   data() {
     return {
-      cartItems: [],
       BuyshowDialog: false,
       buyshoworder: {},
       deletorder: {},
@@ -93,47 +100,99 @@ export default defineComponent({
       shippingAddress: "",
       mode_of_transport: "",
       payment: "",
-      //currentPage: 1,
-      //itemsPerPage: 5,
+
+      cartList: [] as Cart[],
+      marketMap: new Map<number, string>() as Map<number, string>,
+      itemMap: new Map<number, CartItem[]>() as Map<number, CartItem[]>,
     };
   },
 
-  mounted() {
-    //console.log('mounted');
-    this.getCart();
-  },
-
   methods: {
-    getCart() {},
-    // getCart() {
-    //   const path = "http://localhost:3000/carts";
-    //   axios
-    //     .get(path)
-    //     .then((res) => {
-    //       this.cartItems = res.data;
-    //       //console.log(cartItems);
-    //     })
-    //     .catch((error) => {
-    //       //console.log("No catch data.");
-    //     });
-    // },
+    getCart() {
+      const userId = Number(sessionStorage.getItem("user"));
+      if (userId) {
+        CartDataService.getByUser(userId)
+          .then((response: any) => {
+            this.cartList = response.data;
+            this.cartList.forEach((cart: Cart) => {
+              if (!this.marketMap.has(cart.market_id)) {
+                MarketDataService.get(cart.market_id)
+                  .then((response: any) => {
+                    this.marketMap.set(
+                      cart.market_id,
+                      response.data.market_name
+                    );
+                  })
+                  .catch((e: Error) => {
+                    console.log(e);
+                  });
+              }
 
-    // buy(items) {
-    //   this.buyshoworder = {};
-    //   for (const item of items) {
-    //     const productID = item.product_id;
-    //     if (!this.buyshoworder[productID]) {
-    //       this.buyshoworder[productID] = {
-    //         product_name: item.product_name,
-    //         price: item.price,
-    //         stock: item.stock,
-    //         quantity: item.quantity
-    //       };
-    //     }
-    //   }
-    //   console.log(this.buyshoworder);
-    //   this.BuyshowDialog = true;
-    // },
+              this.itemMap.set(cart.market_id, []);
+              if (this.itemMap.has(cart.market_id)) {
+                ProductDataService.get(cart.product_id)
+                  .then((response: any) => {
+                    this.itemMap.get(cart.market_id)?.push({
+                      product: response.data,
+                      quantity: cart.quntity,
+                    });
+                  })
+                  .catch((e: Error) => {
+                    console.log(e);
+                  });
+              }
+            });
+          })
+          .catch((e: Error) => {
+            console.log(e);
+          });
+      }
+    },
+
+    getGroupByMarket() {
+      return this.groupBy(this.cartList, "market_id");
+    },
+
+    getProductList(marketId: number) {
+      return this.itemMap.get(marketId);
+    },
+
+    getMarketName(marketId: number) {
+      return this.marketMap.get(marketId);
+    },
+
+    groupBy(array: any, key: any) {
+      // Return the end result
+      return array.reduce((result: any, currentValue: any) => {
+        // If an array already present for key, push it to the array. Else create an array and push the object
+        (result[currentValue[key]] = result[currentValue[key]] || []).push(
+          currentValue
+        );
+        // Return the current iteration `result` value, this will be taken as next iteration `result` value and accumulate
+        return result;
+      }, {}); // empty object is the initial value for result object
+    },
+
+    deleteItem(marketId: number, productId: number) {
+      const userId = 1;
+    },
+
+    buy(marketId: number) {
+      // this.buyshoworder = {};
+      // for (const item of items) {
+      //   const productID = item.product_id;
+      //   if (!this.buyshoworder[productID]) {
+      //     this.buyshoworder[productID] = {
+      //       product_name: item.product_name,
+      //       price: item.price,
+      //       stock: item.stock,
+      //       quantity: item.quantity,
+      //     };
+      //   }
+      // }
+      // console.log(this.buyshoworder);
+      // this.BuyshowDialog = true;
+    },
 
     // submitOrder() {
     //   if (!this.consignee || !this.shippingAddress || !this.mode_of_transport || !this.payment) {
@@ -194,99 +253,10 @@ export default defineComponent({
     //     (this.mode_of_transport = ""),
     //     (this.payment = "");
     // },
-
-    // delet(items) {
-    //   const deletorder = {};
-    //   for (const item of items){
-    //     const deletmarketID = item.market_id;
-    //     const deletproductID = item.product_id;
-    //     deletorder.market_id = this.deletmarketID;
-    //     deletorder.product_id = this.deletproductID;
-    //   }
-    //   axios.post('http://localhost:3000/consignee', deletorder)
-    //   .then((res) => {
-    //     console.log('Successful delete data.');
-    //   })
-    //   .catch((error) => {
-    //     console.log('Error delete data.');
-    //   });
-    // },
   },
 
-  computed: {
-    // cartItemsByMarket() {
-    //   const itemsByMarket = {};
-    //   for (const item of this.cartItems) {
-    //     const marketName = item.market_name;
-    //     if (!itemsByMarket[marketName]) {
-    //       itemsByMarket[marketName] = [];
-    //       itemsByMarket[marketName].push(item);
-    //     }else{
-    //       itemsByMarket[marketName].push(item);
-    //     }
-    //   }
-    //   return itemsByMarket;
-    // },
+  mounted() {
+    this.getCart();
   },
 });
 </script>
-
-<style>
-.cart-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.market-container {
-  width: 40%;
-  margin: 10px;
-  border: 1px solid rgba(0, 0, 0, 0.2);
-  padding: 10px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.market-header {
-  flex: 1;
-}
-
-.market-content {
-  flex: 2;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-}
-
-.product-item {
-  display: flex;
-  margin-bottom: 10px;
-}
-
-.product-info {
-  text-align: center;
-  flex: 2;
-  display: flex;
-  justify-content: center;
-}
-
-.center-section {
-  flex: 1;
-  align-items: center;
-}
-
-.button {
-  background-color: transparent;
-  padding: 0;
-  font-size: 20px;
-  text-decoration: underline;
-  color: black;
-  cursor: pointer;
-}
-
-.button:hover {
-  text-decoration: none;
-  color: #555;
-}
-</style>

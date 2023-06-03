@@ -11,8 +11,8 @@ class GetAllCart(Resource):
         return service.get_all()
     
 class GetAllCartByMember(Resource):
-    def get(self):
-        return service.get_all_by_member(data=request.json)
+    def get(self, id):
+        return service.get_all_by_member(member_id=id)
 
 class GetCartItem(Resource):
     def get(self):
