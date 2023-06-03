@@ -1,65 +1,56 @@
 <template>
   <v-container>
-      <v-row
-        class="list px-3 mx-auto"
-        style="height: 100px"
-        justify="space-between"
-      >
-        <v-col cols="auto">
-          <v-card-title class="mb-2">
-            <p class="text-md-center">[Management] Product List</p>
-          </v-card-title>
-        </v-col>
-        <v-spacer></v-spacer>
-        <v-col cols="auto">
-          <v-btn color="orange-lighten-4" class="ml-8" @click="createProduct">
-            建立產品
-          </v-btn>
-        </v-col>
-      </v-row>
-    </v-container>
-
-  <v-table>
-    <thead>
-      <tr>
-        <th class="text-left">Product Name</th>
-        <th class="text-left">Category</th>
-        <th class="text-left">Brand</th>
-        <th class="text-left">Price</th>
-        <th class="text-left">Stock</th>
-        <th class="text-left">Status</th>
-        <th class="text-left">Edit</th>
-        <th class="text-left">Delete</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr v-for="(product, index) in productList" :key="index">
-        <td>{{ product.product_name }}</td>
-        <td>{{ product.category }}</td>
-        <td>{{ product.brand }}</td>
-        <td>NTD$ {{ product.price }}</td>
-        <td>{{ product.stock }}</td>
-        <td>
-          <v-row justify="center">
+    <v-row justify="space-between">
+      <v-col cols="auto">
+        <v-card-title>
+          [Management] Product List
+        </v-card-title>
+      </v-col>
+      <v-col cols="auto">
+        <v-btn color="orange-lighten-4" @click="createProduct">
+          建立產品
+        </v-btn>
+      </v-col>
+    </v-row>
+    <v-table>
+      <thead>
+        <tr>
+          <th>Product Name</th>
+          <th>Category</th>
+          <th>Brand</th>
+          <th>Price</th>
+          <th>Stock</th>
+          <th>Status</th>
+          <th>Edit</th>
+          <th>Delete</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          v-for="(product, index) in productList"
+          :key="index"
+        >
+          <td>{{ product.product_name }}</td>
+          <td>{{ product.category }}</td>
+          <td>{{ product.brand }}</td>
+          <td>NTD$ {{ product.price }}</td>
+          <td>{{ product.stock }}</td>
+          <td>
             <v-icon
               @click="changeStatus(product)"
               :icon="product.status ? 'fa:fas fa-lock' : 'fa:fas fa-lock-open'"
             ></v-icon>
-          </v-row>
-        </td>
-        <td>
-          <v-row>
+          </td>
+          <td>
             <v-btn
               color="blue-grey-lighten-2"
+              @click="openDialog(product), (dialog = true)"
             >
-            <!-- @click="openDialog(product), (dialog = true)" -->
               <v-icon icon="fa:fas fa-edit"></v-icon>
             </v-btn>
             <v-dialog v-model="dialog" persistent width="1024">
               <v-card>
-                <v-card-title>
-                  <span class="text-h5">Edit Product</span>
-                </v-card-title>
+                <v-card-title class="text-h5"> Edit Product </v-card-title>
                 <v-card-text>
                   <v-container>
                     <v-row>
@@ -131,20 +122,17 @@
                 </v-card-actions>
               </v-card>
             </v-dialog>
-          </v-row>
-        </td>
-        <td>
-          <v-row>
+          </td>
+          <td>
             <v-icon
               icon="fa:fas fa-trash"
               @click="deleteProduct(product.product_id)"
             ></v-icon>
-          </v-row>
-        </td>
-        <td></td>
-      </tr>
-    </tbody>
-  </v-table>
+          </td>
+        </tr>
+      </tbody>
+    </v-table>
+  </v-container>
 </template>
 
 <script lang="ts">
@@ -227,12 +215,15 @@ export default defineComponent({
     },
 
     openDialog(product: Product) {
-      this.state = product;
+      this.state.product_name = product.product_name;
+      this.state.category = product.category;
+      this.state.brand = product.brand;
+      this.state.price = product.price;
+      this.state.stock = product.stock;
     },
 
     updateProduct(productId: number) {
       this.v$.$validate();
-      console.log(this.v$.$error);
       if (!this.v$.$error) {
         const product: UpdateProduct = {
           product_name: this.state.product_name,
@@ -246,6 +237,7 @@ export default defineComponent({
         ProductDataService.update(productId, product)
           .then((response: any) => {
             console.log(response);
+            this.dialog = false;
           })
           .catch((e: Error) => {
             console.log(e);
@@ -273,9 +265,3 @@ export default defineComponent({
   },
 });
 </script>
-
-<style>
-.list {
-  max-width: 750px;
-}
-</style>
