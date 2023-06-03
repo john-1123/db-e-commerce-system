@@ -1,7 +1,7 @@
-from main.models._db import save, delete
-from flask import jsonify
+from main.models._db import delete, save
 from main.models.cart_item import CartItem
 from main.schemas.cart_item import CartItemSchema
+
 
 class CartItemService:
     def __init__(self):
@@ -108,7 +108,7 @@ class CartItemService:
             return delete_cart_list
 
     def delete_all_by_market(self, data):
-        cart = CartItem.query.filter(CartItem.market_id==data['market_id']).all()
+        cart = CartItem.query.filter(CartItem.member_id==data['member_id'],CartItem.market_id==data['market_id']).all()
         
         delete_cart_list=[]
 

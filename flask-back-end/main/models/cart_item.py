@@ -1,7 +1,4 @@
 from ._db import db
-from .market import Market
-from .user import User
-from .product import Product
 
 class CartItem(db.Model):
     __tablename__ = 'cart_item'
