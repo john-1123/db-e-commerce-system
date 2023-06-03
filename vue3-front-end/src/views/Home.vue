@@ -4,26 +4,24 @@
     <v-row
       class="justify-center"
       no-gutters
-      v-for="market in data.items"
-      :key="market.market_id"
+      v-for="market in getGroupByMarket()"
     >
       <v-col cols="12" md="12" class="ma-3">
-        <v-chip size="large" append-icon="mdi-arrow-right" @click="goMarket">{{
-          market.market_name
-        }}</v-chip>
+        <v-chip size="large" append-icon="mdi-arrow-right" @click="goMarket(market[0].market_id)">
+          {{ getMarketName(market[0].market_id) }}
+        </v-chip>
       </v-col>
-
       <v-col
         cols="12"
         sm="6"
         md="3"
-        v-for="product in market.product_list"
-        :key="product.id"
+        v-for="product in market"
+        :key="product.product_id"
         class="ma-3 text-start"
       >
         <v-card>
-          <v-card-title>{{ product.name }}</v-card-title>
-          <v-card-subtitle>{{ product.description }}</v-card-subtitle>
+          <v-card-title>{{ product.product_name }}</v-card-title>
+          <v-card-subtitle>{{ product.brand }}</v-card-subtitle>
           <v-card-title>Price: ${{ product.price }}</v-card-title>
           <v-card-actions>
             <v-btn rounded="lg" variant="tonal" prepend-icon="mdi-cart"
@@ -37,93 +35,78 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from "vue";
+import { defineComponent } from "vue";
 import { useRouter } from "vue-router";
+import Product from "../models/product/product";
+import ProductDataService from "../services/ProductDataService";
+import MarketDataService from "../services/MarketDataService";
 
 export default defineComponent({
   setup() {
     const router = useRouter();
-
-    const data = reactive({
-      items: [
-        {
-          market_id: 1,
-          market_name: "MARKET NAME",
-          product_list: [
-            {
-              id: 1,
-              name: "Item 1",
-              description: "This is item 1",
-              price: 100,
-            },
-            {
-              id: 2,
-              name: "Item 2",
-              description: "This is item 2",
-              price: 100,
-            },
-            {
-              id: 3,
-              name: "Item 3",
-              description: "This is item 3",
-              price: 100,
-            },
-            {
-              id: 4,
-              name: "Item 4",
-              description: "This is item 4",
-              price: 100,
-            },
-            {
-              id: 5,
-              name: "Item 5",
-              description: "This is item 5",
-              price: 100,
-            },
-          ],
-        },
-        {
-          market_id: 2,
-          market_name: "MARKET NAME",
-          product_list: [
-            {
-              id: 1,
-              name: "Item 1",
-              description: "This is item 1",
-              price: 100,
-            },
-            {
-              id: 2,
-              name: "Item 2",
-              description: "This is item 2",
-              price: 100,
-            },
-            {
-              id: 3,
-              name: "Item 3",
-              description: "This is item 3",
-              price: 100,
-            },
-            {
-              id: 4,
-              name: "Item 4",
-              description: "This is item 4",
-              price: 500,
-            },
-          ],
-        },
-      ],
-    });
-
-    return { router, data };
+    return { router };
   },
+
   data() {
-    return {};
+    return {
+      productList: [] as Product[],
+      marketMap: new Map<number, string>() as Map<number, string>,
+    };
   },
   methods: {
-    goMarket() {
-      this.router.push("/market");
+    getProductList() {
+      ProductDataService.getAll()
+        .then((response: any) => {
+          this.productList = response.data;
+          this.productList.forEach((product: Product) => {
+            if(!this.marketMap.has(product.market_id)) {
+              MarketDataService.get(product.market_id)
+              .then((response: any) => {
+                this.marketMap.set(product.market_id, response.data.market_name);
+              })
+              .catch((e: Error) => {
+                console.log(e);
+              });
+            }
+          })
+        })
+        .catch((e: Error) => {
+          console.log(e);
+        });
     },
+
+    getGroupByMarket() {
+      return this.groupBy(this.productList, "market_id");
+    },
+
+    getMarketName(marketId: number) {
+      return this.marketMap.get(marketId);
+    },
+
+    goMarket(marketId: number) {
+      this.router.push({
+        path: "/market",
+        query: {
+          id: marketId
+        }
+      });
+    },
+
+    groupBy(array: any, key: any) {
+      // Return the end result
+      return array.reduce((result: any, currentValue: any) => {
+        // If an array already present for key, push it to the array. Else create an array and push the object
+        (result[currentValue[key]] = result[currentValue[key]] || []).push(
+          currentValue
+        );
+        // Return the current iteration `result` value, this will be taken as next iteration `result` value and accumulate
+        return result;
+      }, {}); // empty object is the initial value for result object
+    },
+  },
+
+  mounted() {
+    this.getProductList();
   },
 });
 </script>
