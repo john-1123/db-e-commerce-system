@@ -2,9 +2,7 @@
   <v-container>
     <v-row justify="space-between">
       <v-col cols="auto">
-        <v-card-title>
-          [Management] Product List
-        </v-card-title>
+        <v-card-title> [Management] Product List </v-card-title>
       </v-col>
       <v-col cols="auto">
         <v-btn color="orange-lighten-4" @click="createProduct">
@@ -26,10 +24,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr
-          v-for="(product, index) in productList"
-          :key="index"
-        >
+        <tr v-for="(product, index) in productList" :key="index">
           <td>{{ product.product_name }}</td>
           <td>{{ product.category }}</td>
           <td>{{ product.brand }}</td>
@@ -140,7 +135,8 @@ import useValidate from "@vuelidate/core";
 import { required } from "@vuelidate/validators";
 import { computed, defineComponent, reactive } from "vue";
 import { useRouter } from "vue-router";
-import Product, { UpdateProduct } from "../models/user/product";
+import Product from "../models/product/product";
+import { UpdateProduct } from "../models/product/update-prodcut";
 import MarketDataService from "../services/MarketDataService";
 import ProductDataService from "../services/ProductDataService";
 

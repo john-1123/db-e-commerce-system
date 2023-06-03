@@ -1,6 +1,7 @@
 import http from "../http-common";
-import AddtoCart from "../models/user/add-product-cart";
-import { CreateProduct, UpdateProduct } from "../models/user/product";
+import AddtoCart from "../models/product/add-product-cart";
+import { CreateProduct } from "../models/product/create-product";
+import { UpdateProduct } from "../models/product/update-prodcut";
 
 class ProductDataService {
   getAll() {
