@@ -17,7 +17,7 @@ db-e-commerce-system for 2023 NCCU DBMS
 * 進到 *./vue3-front-end* 下 `cd vue3-front-end` 
 * 安裝套件 `npm install`
 * 啟動 `npm run dev`
-* http://localhost:5137/
+* http://127.0.0.1:5173/
 # Flask
 ## Model
 * User <使用者>
