@@ -4,12 +4,7 @@
     <v-row class="mx-3 my-5" v-for="market in getGroupByMarket()">
       <v-col cols="12" class="d-flex">
         <h2>{{ getMarketName(market[0].market_id) }}</h2>
-        <v-btn
-          class="mx-5"
-          color="orange-lighten-4"
-          @click="buyOrder(market[0].market_id)"
-          >下訂單</v-btn
-        >
+        <v-btn class="mx-5" color="orange-lighten-4" @click="buyOrder(market[0].market_id)">下訂單</v-btn>
       </v-col>
       <v-col>
         <v-table>
@@ -35,17 +30,22 @@
               <td>{{ item.quantity }}</td>
               <td>{{ item.product.price * item.quantity }}</td>
               <td>
-                <v-icon
-                  icon="fa:fas fa-trash"
-                  @click="
-                    deleteItem(item.product.market_id, item.product.product_id)
-                  "
-                ></v-icon>
+                <v-icon icon="fa:fas fa-trash" @click="
+                  deleteItem(item.product.market_id, item.product.product_id)
+                "></v-icon>
               </td>
             </tr>
           </tbody>
         </v-table>
       </v-col>
+    </v-row>
+    <v-row v-if="cartList.length == 0">
+      <v-card width="500" class="ma-auto">
+        <v-card-title>購物車是空的~~</v-card-title>
+        <v-card-actions>
+          <v-btn color="blue-lighten-1" @click="goHome">趕緊購物去!</v-btn>
+        </v-card-actions>
+      </v-card>
     </v-row>
   </v-container>
   <v-dialog v-model="dialog" max-width="500">
@@ -56,37 +56,18 @@
           {{ itemLine(item) }}
         </v-card-item>
 
-        <v-text-field
-          class="my-3"
-          v-model="state.consignee"
-          label="Consignee"
-          :error-messages="v$.consignee.$errors.map((e: any) => e.$message)"
-          @input="v$.consignee.$touch"
-          @blur="v$.consignee.$touch"
-        ></v-text-field>
+        <v-text-field class="my-3" v-model="state.consignee" label="Consignee"
+          :error-messages="v$.consignee.$errors.map((e: any) => e.$message)" @input="v$.consignee.$touch"
+          @blur="v$.consignee.$touch"></v-text-field>
 
-        <v-text-field
-          class="my-3"
-          v-model="state.shippingAddress"
-          label="Shipping Address"
-          :error-messages="v$.shippingAddress.$errors.map((e: any) => e.$message)"
-          @input="v$.shippingAddress.$touch"
-          @blur="v$.shippingAddress.$touch"
-        ></v-text-field>
+        <v-text-field class="my-3" v-model="state.shippingAddress" label="Shipping Address"
+          :error-messages="v$.shippingAddress.$errors.map((e: any) => e.$message)" @input="v$.shippingAddress.$touch"
+          @blur="v$.shippingAddress.$touch"></v-text-field>
 
-        <v-select
-          class="my-3"
-          v-model="state.modeOfTransport"
-          :items="transportList"
-          label="Mode of Transport"
-        ></v-select>
+        <v-select class="my-3" v-model="state.modeOfTransport" :items="transportList"
+          label="Mode of Transport"></v-select>
 
-        <v-select
-          class="my-3"
-          v-model="state.paymentMethod"
-          :items="paymentList"
-          label="Payment method"
-        ></v-select>
+        <v-select class="my-3" v-model="state.paymentMethod" :items="paymentList" label="Payment method"></v-select>
 
         <v-card-actions class="justify-space-between">
           <v-btn color="blue-lighten-1" @click="onSubmit">Submit</v-btn>
@@ -273,6 +254,10 @@ export default defineComponent({
       this.state.paymentMethod = PaymentMode.Visa;
       this.v$.$reset();
     },
+
+    goHome() {
+      this.router.push("/home");
+    }
   },
 
   mounted() {
