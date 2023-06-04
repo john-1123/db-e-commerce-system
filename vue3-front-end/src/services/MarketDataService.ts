@@ -13,13 +13,13 @@ class MarketDataService {
     return http.get(`/markets/user/${userId}`);
   }
 
-  //   create(data: CreateProduct) {
-  //     return http.post("/markets", data);
-  //   }
+  create(data: any) {
+    return http.post("/markets", data);
+  }
 
-  //   update(id: number, data: UpdateProduct): Promise<any> {
-  //     return http.put(`/markets/${id}`, data);
-  //   }
+  update(id: number, data: any): Promise<any> {
+    return http.put(`/markets/${id}`, data);
+  }
 
   delete(makretId: number): Promise<any> {
     return http.delete(`/markets/${makretId}`);

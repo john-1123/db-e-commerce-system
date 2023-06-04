@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container v-if="marketId">
     <v-row justify="space-between">
       <v-col cols="auto">
         <v-card-title> [Management] Product List </v-card-title>
@@ -128,6 +128,9 @@
       </tbody>
     </v-table>
   </v-container>
+  <v-container v-if="!marketId">
+    <CreateMarket></CreateMarket>
+  </v-container>
 </template>
 
 <script lang="ts">
@@ -139,10 +142,13 @@ import Product from "../../../models/product/product";
 import { UpdateProduct } from "../../../models/product/update-prodcut";
 import MarketDataService from "../../../services/MarketDataService";
 import ProductDataService from "../../../services/ProductDataService";
-
+import CreateMarket from "./CreateMarket.vue";
 
 export default defineComponent({
   name: "ManageProduct",
+  components: {
+    CreateMarket
+  },
   setup() {
     const router = useRouter();
 
@@ -175,6 +181,7 @@ export default defineComponent({
     return {
       dialog: false,
       productList: [] as Product[],
+      marketId: null,
     };
   },
 
@@ -184,11 +191,11 @@ export default defineComponent({
       if (userId) {
         MarketDataService.getMarketByUser(userId)
           .then((response: any) => {
-            const market_id = response.data.market_id;
-            if(market_id) {
-              ProductDataService.getProductByMarket(market_id)
+            const marketId = response.data.market_id;
+            if(marketId) {
+              this.marketId = marketId
+              ProductDataService.getProductByMarket(marketId)
               .then((response: any) => {
-                console.log(response);
                 this.productList = response.data;
               })
               .catch((e: Error) => {
