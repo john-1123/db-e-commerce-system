@@ -185,7 +185,8 @@ export default defineComponent({
         MarketDataService.getMarketByUser(userId)
           .then((response: any) => {
             const market_id = response.data.market_id;
-            ProductDataService.getProductByMarket(market_id)
+            if(market_id) {
+              ProductDataService.getProductByMarket(market_id)
               .then((response: any) => {
                 console.log(response);
                 this.productList = response.data;
@@ -193,6 +194,7 @@ export default defineComponent({
               .catch((e: Error) => {
                 console.log(e);
               });
+            }
           })
           .catch((e: Error) => {
             console.log(e);

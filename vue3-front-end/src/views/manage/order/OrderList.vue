@@ -87,13 +87,15 @@ export default defineComponent({
       if (userId) {
         MarketDataService.getMarketByUser(userId).then((response: any) => {
           const market_id = response.data.market_id;
-          OrderDataService.getByMarket(market_id)
+          if(market_id) {
+            OrderDataService.getByMarket(market_id)
             .then((response: any) => {
               this.orderList = response.data;
             })
             .catch((e: Error) => {
               console.log(e);
             });
+          }
         });
       }
     },
