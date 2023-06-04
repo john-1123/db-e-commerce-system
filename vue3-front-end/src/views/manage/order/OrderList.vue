@@ -1,6 +1,7 @@
 <template>
-  <v-container>
+  <v-container v-if="marketId">
     <v-card-title> [Management] Order List </v-card-title>
+    <v-card-subtitle>Market Name : {{ marketName }}</v-card-subtitle>
     <v-table>
       <thead>
         <tr>
@@ -26,14 +27,14 @@
             <v-icon icon="fa:fas fa-edit" @click="detail(order)"></v-icon>
           </td>
           <td>
-            <v-icon
-              icon="fa:fas fa-trash"
-              @click="deleteOrder(order.order_id)"
-            ></v-icon>
+            <v-icon icon="fa:fas fa-trash" @click="deleteOrder(order.order_id)"></v-icon>
           </td>
         </tr>
       </tbody>
     </v-table>
+  </v-container>
+  <v-container v-if="!marketId">
+    <CreateMarket></CreateMarket>
   </v-container>
   <v-container>
     <v-dialog v-model="dialog" max-width="500">
@@ -67,34 +68,41 @@ import { defineComponent } from "vue";
 import Order from "../../../models/order/order";
 import MarketDataService from "../../../services/MarketDataService";
 import OrderDataService from "../../../services/OrderDataService";
+import CreateMarket from "../product/CreateMarket.vue";
 
 export default defineComponent({
+  name: "ManageOrder",
+  components: {
+    CreateMarket
+  },
   data() {
     return {
       orderList: [] as Order[],
       selectedOrder: {} as Order,
       dialog: false,
+      marketId: null,
+      marketName: "",
     };
   },
-
   mounted() {
     this.getOrders();
   },
-
   methods: {
     getOrders() {
       const userId = Number(sessionStorage.getItem("user"));
       if (userId) {
         MarketDataService.getMarketByUser(userId).then((response: any) => {
-          const market_id = response.data.market_id;
-          if(market_id) {
-            OrderDataService.getByMarket(market_id)
-            .then((response: any) => {
-              this.orderList = response.data;
-            })
-            .catch((e: Error) => {
-              console.log(e);
-            });
+          const marketId = response.data.market_id;
+          this.marketName = response.data.market_name;
+          if (marketId) {
+            this.marketId = marketId;
+            OrderDataService.getByMarket(marketId)
+              .then((response: any) => {
+                this.orderList = response.data;
+              })
+              .catch((e: Error) => {
+                console.log(e);
+              });
           }
         });
       }

@@ -3,6 +3,7 @@
     <v-row justify="space-between">
       <v-col cols="auto">
         <v-card-title> [Management] Product List </v-card-title>
+        <v-card-subtitle>Market Name : {{ marketName }}</v-card-subtitle>
       </v-col>
       <v-col cols="auto">
         <v-btn color="orange-lighten-4" @click="createProduct">
@@ -31,16 +32,11 @@
           <td>NTD$ {{ product.price }}</td>
           <td>{{ product.stock }}</td>
           <td>
-            <v-icon
-              @click="changeStatus(product)"
-              :icon="product.status ? 'fa:fas fa-lock' : 'fa:fas fa-lock-open'"
-            ></v-icon>
+            <v-icon @click="changeStatus(product)"
+              :icon="product.status ? 'fa:fas fa-lock' : 'fa:fas fa-lock-open'"></v-icon>
           </td>
           <td>
-            <v-btn
-              color="blue-grey-lighten-2"
-              @click="openDialog(product), (dialog = true)"
-            >
+            <v-btn color="blue-grey-lighten-2" @click="openDialog(product), (dialog = true)">
               <v-icon icon="fa:fas fa-edit"></v-icon>
             </v-btn>
             <v-dialog v-model="dialog" persistent width="1024">
@@ -50,67 +46,39 @@
                   <v-container>
                     <v-row>
                       <v-col cols="12">
-                        <v-text-field
-                          v-model="state.product_name"
-                          label="Name"
+                        <v-text-field v-model="state.product_name" label="Name"
                           :error-messages="v$.product_name.$errors.map((e: any) => e.$message)"
-                          @input="v$.product_name.$touch"
-                          @blur="v$.product_name.$touch"
-                        ></v-text-field>
+                          @input="v$.product_name.$touch" @blur="v$.product_name.$touch"></v-text-field>
                       </v-col>
                       <v-col cols="12" sm="6" md="6">
-                        <v-text-field
-                          v-model="state.category"
-                          label="Category*"
-                          :error-messages="v$.category.$errors.map((e: any) => e.$message)"
-                          @input="v$.category.$touch"
-                          @blur="v$.category.$touch"
-                        ></v-text-field>
+                        <v-text-field v-model="state.category" label="Category*"
+                          :error-messages="v$.category.$errors.map((e: any) => e.$message)" @input="v$.category.$touch"
+                          @blur="v$.category.$touch"></v-text-field>
                       </v-col>
                       <v-col cols="12" sm="6" md="6">
-                        <v-text-field
-                          v-model="state.brand"
-                          label="Brand*"
-                          :error-messages="v$.brand.$errors.map((e: any) => e.$message)"
-                          @input="v$.brand.$touch"
-                          @blur="v$.brand.$touch"
-                        ></v-text-field>
+                        <v-text-field v-model="state.brand" label="Brand*"
+                          :error-messages="v$.brand.$errors.map((e: any) => e.$message)" @input="v$.brand.$touch"
+                          @blur="v$.brand.$touch"></v-text-field>
                       </v-col>
                       <v-col cols="12">
-                        <v-text-field
-                          v-model="state.price"
-                          label="Price*"
-                          :error-messages="v$.price.$errors.map((e: any) => e.$message)"
-                          @input="v$.price.$touch"
-                          @blur="v$.price.$touch"
-                        ></v-text-field>
+                        <v-text-field v-model="state.price" label="Price*"
+                          :error-messages="v$.price.$errors.map((e: any) => e.$message)" @input="v$.price.$touch"
+                          @blur="v$.price.$touch"></v-text-field>
                       </v-col>
                       <v-col cols="12">
-                        <v-text-field
-                          v-model="state.stock"
-                          label="Stock*"
-                          :error-messages="v$.stock.$errors.map((e: any) => e.$message)"
-                          @input="v$.stock.$touch"
-                          @blur="v$.stock.$touch"
-                        ></v-text-field>
+                        <v-text-field v-model="state.stock" label="Stock*"
+                          :error-messages="v$.stock.$errors.map((e: any) => e.$message)" @input="v$.stock.$touch"
+                          @blur="v$.stock.$touch"></v-text-field>
                       </v-col>
                     </v-row>
                   </v-container>
                 </v-card-text>
                 <v-card-actions>
                   <v-row class="justify-end mx-3">
-                    <v-btn
-                      color="blue-darken-1"
-                      variant="tonal"
-                      @click="updateProduct(product.product_id)"
-                    >
+                    <v-btn color="blue-darken-1" variant="tonal" @click="updateProduct(product.product_id)">
                       Save
                     </v-btn>
-                    <v-btn
-                      color="blue-darken"
-                      variant="tonal"
-                      @click="dialog = false"
-                    >
+                    <v-btn color="blue-darken" variant="tonal" @click="dialog = false">
                       Close
                     </v-btn>
                   </v-row>
@@ -119,10 +87,7 @@
             </v-dialog>
           </td>
           <td>
-            <v-icon
-              icon="fa:fas fa-trash"
-              @click="deleteProduct(product.product_id)"
-            ></v-icon>
+            <v-icon icon="fa:fas fa-trash" @click="deleteProduct(product.product_id)"></v-icon>
           </td>
         </tr>
       </tbody>
@@ -182,6 +147,7 @@ export default defineComponent({
       dialog: false,
       productList: [] as Product[],
       marketId: null,
+      marketName: "",
     };
   },
 
@@ -192,15 +158,16 @@ export default defineComponent({
         MarketDataService.getMarketByUser(userId)
           .then((response: any) => {
             const marketId = response.data.market_id;
-            if(marketId) {
+            this.marketName = response.data.market_name;
+            if (marketId) {
               this.marketId = marketId
               ProductDataService.getProductByMarket(marketId)
-              .then((response: any) => {
-                this.productList = response.data;
-              })
-              .catch((e: Error) => {
-                console.log(e);
-              });
+                .then((response: any) => {
+                  this.productList = response.data;
+                })
+                .catch((e: Error) => {
+                  console.log(e);
+                });
             }
           })
           .catch((e: Error) => {
