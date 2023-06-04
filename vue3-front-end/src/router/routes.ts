@@ -72,7 +72,6 @@ const routes: Array<RouteRecordRaw> = [
     path: "/market",
     name: "Market",
     component: () => import("../views/Market.vue"),
-    beforeEnter: loginGuard,
     meta: {
       layout: "Default",
     },
