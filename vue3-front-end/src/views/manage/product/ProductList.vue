@@ -2,7 +2,7 @@
   <v-container v-if="marketId">
     <v-row justify="space-between">
       <v-col cols="auto">
-        <v-card-title> [Management] Product List </v-card-title>
+        <v-card-title> [Management] 賣家管理商品 </v-card-title>
         <v-card-subtitle>Market Name : {{ marketName }}</v-card-subtitle>
       </v-col>
       <v-col cols="auto">
@@ -29,14 +29,14 @@
           <td>{{ product.product_name }}</td>
           <td>{{ product.category }}</td>
           <td>{{ product.brand }}</td>
-          <td>NTD$ {{ product.price }}</td>
+          <td>NTD$ {{ product.price.toLocaleString('zh-TW')  }}</td>
           <td>{{ product.stock }}</td>
           <td>
             <v-icon @click="changeStatus(product)"
               :icon="product.status ? 'fa:fas fa-lock' : 'fa:fas fa-lock-open'"></v-icon>
           </td>
           <td>
-            <v-btn color="blue-grey-lighten-2" @click="openDialog(product), (dialog = true)">
+            <v-btn color="deep-orange-lighten-3" @click="openDialog(product), (dialog = true)">
               <v-icon icon="fa:fas fa-edit"></v-icon>
             </v-btn>
             <v-dialog v-model="dialog" persistent width="1024">
@@ -164,6 +164,7 @@ export default defineComponent({
               ProductDataService.getProductByMarket(marketId)
                 .then((response: any) => {
                   this.productList = response.data;
+                  this.getProducts();
                 })
                 .catch((e: Error) => {
                   console.log(e);

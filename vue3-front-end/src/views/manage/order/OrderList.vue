@@ -1,6 +1,6 @@
 <template>
   <v-container v-if="marketId">
-    <v-card-title> [Management] Order List </v-card-title>
+    <v-card-title> [Management] 賣家管理訂單 </v-card-title>
     <v-card-subtitle>Market Name : {{ marketName }}</v-card-subtitle>
     <v-table>
       <thead>
@@ -22,7 +22,7 @@
           <td>{{ order.items }}</td>
           <td>{{ order.cashs }}</td>
           <td>{{ order.quntities }}</td>
-          <td>{{ order.cost }}</td>
+          <td>{{ order.cost}}</td>
           <td>
             <v-icon icon="fa:fas fa-edit" @click="detail(order)"></v-icon>
           </td>

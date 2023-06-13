@@ -21,10 +21,11 @@
         :key="product.product_id"
         class="ma-3 text-start"
       >
+      <template v-if="!product.status">
         <v-card>
           <v-card-title>{{ product.product_name }}</v-card-title>
           <v-card-subtitle>{{ product.brand }}</v-card-subtitle>
-          <v-card-title>Price: ${{ product.price }}</v-card-title>
+          <v-card-title>Price: NTD${{ product.price.toLocaleString('zh-TW') }}</v-card-title>
           <v-card-actions>
             <v-btn
               rounded="lg"
@@ -36,6 +37,7 @@
             </v-btn>
           </v-card-actions>
         </v-card>
+      </template>
       </v-col>
     </v-row>
 

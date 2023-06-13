@@ -26,9 +26,9 @@
               <td>{{ item.product.category }}</td>
               <td>{{ item.product.brand }}</td>
               <td>{{ item.product.stock }}</td>
-              <td>NTD$ {{ item.product.price }}</td>
+              <td>NTD$ {{ item.product.price.toLocaleString('zh-TW') }}</td>
               <td>{{ item.quantity }}</td>
-              <td>{{ item.product.price * item.quantity }}</td>
+              <td>NTD$ {{ (item.product.price * item.quantity).toLocaleString('zh-TW') }}</td>
               <td>
                 <v-icon icon="fa:fas fa-trash" @click="
                   deleteItem(item.product.market_id, item.product.product_id)
