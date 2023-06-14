@@ -23,3 +23,7 @@ class GetAllOrderByMarket(Resource):
 class GetAllOrderByMember(Resource):
     def get(self, id):
         return service.get_all_order_by_member(user_id=id)
+
+class UpdateOrder(Resource):
+    def put(self, id):
+        return service.update(order_id=id, data=request.json)

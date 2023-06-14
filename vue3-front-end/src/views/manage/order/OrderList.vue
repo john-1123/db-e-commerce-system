@@ -25,10 +25,7 @@
             <v-icon icon="fa:fas fa-edit" @click="detail(order)"></v-icon>
           </td>
           <td>
-            <v-icon
-              icon="fa:fas fa-trash"
-              @click="deleteOrder(order.order_id)"
-            ></v-icon>
+            <v-icon icon="fa:fas fa-trash" @click="deleteOrder(order)"></v-icon>
           </td>
         </tr>
       </tbody>
@@ -60,9 +57,13 @@
             <v-list :items="getItemList()"></v-list>
           </v-card-item>
           <v-card-item> 小計 : {{ selectedOrder.cost }} 元 </v-card-item>
+          <v-card-item> 訂單狀態 : {{ selectedOrder.state }} </v-card-item>
         </v-card-text>
-        <v-card-actions>
-          <v-btn @click="close">Close</v-btn>
+        <v-card-actions class="d-flex justify-end">
+          <v-btn variant="tonal" color="blue" @click="checkOrder"
+            >確認訂單
+          </v-btn>
+          <v-btn variant="tonal" @click="dialog = false">關閉</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -75,6 +76,8 @@ import Order from "../../../models/order/order";
 import MarketDataService from "../../../services/MarketDataService";
 import OrderDataService from "../../../services/OrderDataService";
 import CreateMarket from "../product/CreateMarket.vue";
+import { OrderState } from "../../../models/order/order-state";
+import { UpdateOrderState } from "../../../models/order/update-order-state";
 
 export default defineComponent({
   name: "ManageOrder",
@@ -119,14 +122,9 @@ export default defineComponent({
       this.dialog = true;
     },
 
-    close() {
-      this.dialog = false;
-    },
-
-    deleteOrder(orderId: number) {
-      OrderDataService.delete(orderId)
+    deleteOrder(order: Order) {
+      OrderDataService.delete(order.order_id)
         .then((response: any) => {
-          console.log(response.data);
           this.getOrders();
         })
         .catch((e: Error) => {
@@ -137,7 +135,7 @@ export default defineComponent({
     getItemList() {
       const itemList = [];
       const productList = this.selectedOrder.items.split(",");
-      const quantityList = this.selectedOrder.quntities.split(",");
+      const quantityList = this.selectedOrder.quantities.split(",");
       const cashList = this.selectedOrder.cashs.split(",");
       for (let i = 0; i < productList.length; i++) {
         itemList.push(
@@ -145,6 +143,22 @@ export default defineComponent({
         );
       }
       return itemList;
+    },
+
+    checkOrder() {
+      if (this.selectedOrder.state == OrderState.待確認) {
+        const state = {
+          state: OrderState.配送中,
+        } as UpdateOrderState;
+        OrderDataService.update(this.selectedOrder.order_id, state)
+          .then((response: any) => {
+            this.dialog = false;
+            this.getOrders();
+          })
+          .catch((e: Error) => {
+            console.log(e);
+          });
+      }
     },
   },
 });

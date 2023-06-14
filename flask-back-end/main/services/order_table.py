@@ -78,6 +78,12 @@ class OrderService:
             delete(item)
 
         return self.order_schema.jsonify(new_order)
+    
+    def update(self, order_id, data):
+        order = Order_Table.query.get(order_id)
+        order.state = data["state"]
+        save(order)
+        return self.order_schema.jsonify(order)
 
     def delete(self, order_id):
         order = Order_Table.query.filter_by(order_id = order_id).first()

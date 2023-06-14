@@ -10,7 +10,7 @@ export default interface Order {
   mode_of_transport: TransportMode;
   state: string;
   items: string;
-  quntities: string;
+  quantities: string;
   cashs: string;
   cost: number;
 }

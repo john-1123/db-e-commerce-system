@@ -7,9 +7,8 @@ class Order_Table(db.Model):
     __tablename__ = 'order_table'
 
     order_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    member_id = db.Column(db.Integer, db.ForeignKey('user.user_id'),primary_key=True,nullable=False)
-    market_id = db.Column(db.Integer, db.ForeignKey('market.market_id'),primary_key=True,nullable=False)    
-    
+    member_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)
+    market_id = db.Column(db.Integer, db.ForeignKey('market.market_id'), nullable=False)    
     state = db.Column(db.String(10), nullable=False)
     create_time = db.Column(db.DateTime, nullable=False) 
     shipping_address = db.Column(db.String(100), nullable=False)

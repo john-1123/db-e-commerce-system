@@ -11,7 +11,7 @@ from main.models._db import db
 from main.schemas._ma import ma
 
 from main.controllers.cart_item import AddCartItem, DeleteCartItem, ReviseCartItem, DeleteAllCartItemByMarket, DeleteAllCartItemByMember, GetAllCartByMember
-from main.controllers.order_table import GetOrder, GetAllOrderByMember, GetAllOrderByMarket, CreateOrder, DeleteOrder
+from main.controllers.order_table import GetOrder, GetAllOrderByMember, GetAllOrderByMarket, CreateOrder, DeleteOrder, UpdateOrder
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:password@localhost:3306/ecommerce'
@@ -76,11 +76,10 @@ api.add_resource(DeleteAllCartItemByMarket, '/cart/product/all/market')
 # in method <get,post,delete>
 api.add_resource(GetOrder, '/order')
 api.add_resource(CreateOrder, '/order')
+api.add_resource(UpdateOrder, '/order/<int:id>')
 api.add_resource(DeleteOrder, '/order/<int:id>')
 api.add_resource(GetAllOrderByMarket, '/order/market/<int:id>')
 api.add_resource(GetAllOrderByMember, '/order/user/<int:id>')
-# api.add_resource(UpdateOrder,'/order')
-
 
 with app.app_context():
     db.create_all()
