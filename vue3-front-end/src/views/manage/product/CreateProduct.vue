@@ -12,14 +12,12 @@
           @blur="v$.product_name.$touch"
         ></v-text-field>
 
-        <v-text-field
+        <v-select
           class="ma-3"
           v-model="state.category"
+          :items="categoryList"
           label="Category*"
-          :error-messages="v$.category.$errors.map((e: any) => e.$message)"
-          @input="v$.category.$touch"
-          @blur="v$.category.$touch"
-        ></v-text-field>
+        ></v-select>
 
         <v-text-field
           class="ma-3"
@@ -63,6 +61,7 @@ import { useRouter } from "vue-router";
 import { CreateProduct } from "../../../models/product/create-product";
 import MarketDataService from "../../../services/MarketDataService";
 import ProductDataService from "../../../services/ProductDataService";
+import { PrdouctCategory } from "../../../models/product/product-category";
 
 export default defineComponent({
   name: "create-product",
@@ -71,13 +70,13 @@ export default defineComponent({
 
     const state = reactive({
       product_name: "",
-      category: "",
+      category: PrdouctCategory.居家生活,
       brand: "",
       price: 1,
       stock: 1,
       status: false,
       market_id: 0,
-    } as CreateProduct);
+    });
 
     const rules = computed(() => {
       return {
@@ -91,7 +90,9 @@ export default defineComponent({
 
     const v$ = useValidate(rules, state);
 
-    return { state, router, v$ };
+    const categoryList = Object.values(PrdouctCategory);
+
+    return { state, router, v$, categoryList };
   },
 
   methods: {

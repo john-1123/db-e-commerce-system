@@ -144,6 +144,7 @@ import { UpdateProduct } from "../../../models/product/update-prodcut";
 import MarketDataService from "../../../services/MarketDataService";
 import ProductDataService from "../../../services/ProductDataService";
 import CreateMarket from "./CreateMarket.vue";
+import { PrdouctCategory } from "../../../models/product/product-category";
 
 export default defineComponent({
   name: "ManageProduct",
@@ -174,6 +175,8 @@ export default defineComponent({
     });
 
     const v$ = useValidate(rules, state);
+
+    const categoryList = Object.values(PrdouctCategory);
 
     return { router, state, v$ };
   },
