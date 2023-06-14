@@ -11,7 +11,7 @@ class CreateCart(Resource):
         return service.create(data=request.json) 
     
 ### remember to reduce the product number
-### or delete the quntity attribution
+### or delete the quantity attribution
 
 class GetCart(Resource):
     def get(self):

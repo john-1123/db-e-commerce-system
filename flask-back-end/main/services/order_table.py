@@ -11,7 +11,7 @@ class OrderService:
         self.orders_schema = OrderSchema(many=True)
 
     def get(self, data):
-        order = Order_Table.query.filter(Order_Table.order_id==data['order_id']).first()
+        order = Order_Table.query.filter_by(order_id = data['order_id']).first()
       
         if order == None:
             return "not found"
@@ -19,11 +19,11 @@ class OrderService:
             return self.order_schema.jsonify(order)
     
     def get_all_order_by_market(self, market_id):
-        order_list = Order_Table.query.filter_by(market_id=market_id).all()
+        order_list = Order_Table.query.filter_by(market_id = market_id).all()
         return self.orders_schema.jsonify(order_list)
 
     def get_all_order_by_member(self, user_id):
-        order_list = Order_Table.query.filter_by(member_id=user_id).all()
+        order_list = Order_Table.query.filter_by(member_id = user_id).all()
         return self.orders_schema.jsonify(order_list)
 
     def create(self, data):
@@ -31,7 +31,7 @@ class OrderService:
 
         cost = 0
         items_list = []
-        quntity_list = []
+        quantity_list = []
         cash_list = []
         
         if len(items) == 0:
@@ -39,7 +39,7 @@ class OrderService:
         
         for item in items:
             product_id = item.product_id
-            demand = item.quntity
+            demand = item.quantity
             
             this_product = Product.query.filter_by(product_id = product_id).first()
             price = this_product.price
@@ -47,7 +47,7 @@ class OrderService:
             item_name = this_product.product_name
             
             items_list.append(item_name)
-            quntity_list.append(str(demand))
+            quantity_list.append(str(demand))
             cash_list.append(str(price*demand))
             
             if supply < demand:
@@ -65,7 +65,7 @@ class OrderService:
             payment_method = data['payment_method'],
             mode_of_transport = data['mode_of_transport'],
             items = ",".join(items_list),
-            quntities = ",".join(quntity_list),
+            quntities = ",".join(quantity_list),
             cashs = ",".join(cash_list),
             cost = cost
         )
@@ -73,12 +73,13 @@ class OrderService:
         save(new_order)
 
         for item in items:
+            print(item['quantity'])
             delete(item)
 
         return self.order_schema.jsonify(new_order)
 
     def delete(self, order_id):
-        order = Order_Table.query.filter_by(order_id=order_id).first()
+        order = Order_Table.query.filter_by(order_id = order_id).first()
         if order:
             delete(order)
             return self.order_schema.jsonify(order)

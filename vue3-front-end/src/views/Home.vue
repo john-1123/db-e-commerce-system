@@ -21,23 +21,27 @@
         :key="product.product_id"
         class="ma-3 text-start"
       >
-      <template v-if="!product.status">
-        <v-card>
-          <v-card-title>{{ product.product_name }}</v-card-title>
-          <v-card-subtitle>{{ product.brand }}</v-card-subtitle>
-          <v-card-title>Price: NTD${{ product.price.toLocaleString('zh-TW') }}</v-card-title>
-          <v-card-actions>
-            <v-btn
-              rounded="lg"
-              variant="tonal"
-              color="blue-lighten-1"
-              @click="detail(product)"
+        <template v-if="!product.status">
+          <v-card>
+            <v-card-title>{{ product.product_name }}</v-card-title>
+            <v-card-subtitle>{{ product.brand }}</v-card-subtitle>
+            <v-card-title
+              >Price: NTD${{
+                product.price.toLocaleString("zh-TW")
+              }}</v-card-title
             >
-              查看更多
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </template>
+            <v-card-actions>
+              <v-btn
+                rounded="lg"
+                variant="tonal"
+                color="blue-lighten-1"
+                @click="detail(product)"
+              >
+                查看更多
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </template>
       </v-col>
     </v-row>
 
@@ -165,7 +169,7 @@ export default defineComponent({
           member_id: user_id,
           market_id: this.selectedProduct.market_id,
           product_id: this.selectedProduct.product_id,
-          quntity: this.quantity,
+          quantity: this.quantity,
         };
         CartDataService.addToCart(data)
           .then((response: any) => {

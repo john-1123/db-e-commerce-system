@@ -4,7 +4,12 @@
     <v-row class="mx-3 my-5" v-for="market in getGroupByMarket()">
       <v-col cols="12" class="d-flex">
         <h2>{{ getMarketName(market[0].market_id) }}</h2>
-        <v-btn class="mx-5" color="orange-lighten-4" @click="buyOrder(market[0].market_id)">下訂單</v-btn>
+        <v-btn
+          class="mx-5"
+          color="orange-lighten-4"
+          @click="buyOrder(market[0].market_id)"
+          >下訂單</v-btn
+        >
       </v-col>
       <v-col>
         <v-table>
@@ -26,13 +31,21 @@
               <td>{{ item.product.category }}</td>
               <td>{{ item.product.brand }}</td>
               <td>{{ item.product.stock }}</td>
-              <td>NTD$ {{ item.product.price.toLocaleString('zh-TW') }}</td>
+              <td>NTD$ {{ item.product.price.toLocaleString("zh-TW") }}</td>
               <td>{{ item.quantity }}</td>
-              <td>NTD$ {{ (item.product.price * item.quantity).toLocaleString('zh-TW') }}</td>
               <td>
-                <v-icon icon="fa:fas fa-trash" @click="
-                  deleteItem(item.product.market_id, item.product.product_id)
-                "></v-icon>
+                NTD$
+                {{
+                  (item.product.price * item.quantity).toLocaleString("zh-TW")
+                }}
+              </td>
+              <td>
+                <v-icon
+                  icon="fa:fas fa-trash"
+                  @click="
+                    deleteItem(item.product.market_id, item.product.product_id)
+                  "
+                ></v-icon>
               </td>
             </tr>
           </tbody>
@@ -56,18 +69,37 @@
           {{ itemLine(item) }}
         </v-card-item>
 
-        <v-text-field class="my-3" v-model="state.consignee" label="Consignee"
-          :error-messages="v$.consignee.$errors.map((e: any) => e.$message)" @input="v$.consignee.$touch"
-          @blur="v$.consignee.$touch"></v-text-field>
+        <v-text-field
+          class="my-3"
+          v-model="state.consignee"
+          label="Consignee"
+          :error-messages="v$.consignee.$errors.map((e: any) => e.$message)"
+          @input="v$.consignee.$touch"
+          @blur="v$.consignee.$touch"
+        ></v-text-field>
 
-        <v-text-field class="my-3" v-model="state.shippingAddress" label="Shipping Address"
-          :error-messages="v$.shippingAddress.$errors.map((e: any) => e.$message)" @input="v$.shippingAddress.$touch"
-          @blur="v$.shippingAddress.$touch"></v-text-field>
+        <v-text-field
+          class="my-3"
+          v-model="state.shippingAddress"
+          label="Shipping Address"
+          :error-messages="v$.shippingAddress.$errors.map((e: any) => e.$message)"
+          @input="v$.shippingAddress.$touch"
+          @blur="v$.shippingAddress.$touch"
+        ></v-text-field>
 
-        <v-select class="my-3" v-model="state.modeOfTransport" :items="transportList"
-          label="Mode of Transport"></v-select>
+        <v-select
+          class="my-3"
+          v-model="state.modeOfTransport"
+          :items="transportList"
+          label="Mode of Transport"
+        ></v-select>
 
-        <v-select class="my-3" v-model="state.paymentMethod" :items="paymentList" label="Payment method"></v-select>
+        <v-select
+          class="my-3"
+          v-model="state.paymentMethod"
+          :items="paymentList"
+          label="Payment method"
+        ></v-select>
 
         <v-card-actions class="justify-space-between">
           <v-btn color="blue-lighten-1" @click="onSubmit">Submit</v-btn>
@@ -158,7 +190,7 @@ export default defineComponent({
                   .then((response: any) => {
                     this.itemMap.get(cart.market_id)?.push({
                       product: response.data,
-                      quantity: cart.quntity,
+                      quantity: cart.quantity,
                     });
                   })
                   .catch((e: Error) => {
@@ -257,7 +289,7 @@ export default defineComponent({
 
     goHome() {
       this.router.push("/home");
-    }
+    },
   },
 
   mounted() {

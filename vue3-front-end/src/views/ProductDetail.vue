@@ -42,7 +42,7 @@ export default defineComponent({
           member_id: user_id,
           market_id: product.market_id,
           product_id: product.product_id,
-          quntity: 1,
+          quantity: 1,
         };
         CartDataService.addToCart(data)
           .then((response: any) => {

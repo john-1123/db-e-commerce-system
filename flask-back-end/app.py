@@ -53,7 +53,7 @@ api.add_resource(DeleteMarket, '/markets/<int:id>')
 
 
 # cart_item api
-# in json <member_id=,market_id=,product_id=,quntity=>
+# in json <member_id=,market_id=,product_id=,qauntity=>
 # in method <get,post,delete,put>
 # api.add_resource(GetCartItem,'/cart/product')
 api.add_resource(AddCartItem, '/cart/product')

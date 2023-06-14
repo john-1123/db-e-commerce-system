@@ -16,7 +16,7 @@ class CartItemService:
             return_dict["member_id"]=i.member_id
             return_dict["market_id"]=i.market_id
             return_dict["product_id"]=i.product_id
-            return_dict["quntity"]=i.quntity
+            return_dict["quantity"]=i.quantity
             return_list.append(return_dict)
         return return_list
     
@@ -30,18 +30,18 @@ class CartItemService:
         for i in cart:
             return_dict=dict()
             return_dict["product_id"]=i.product_id
-            return_dict["quntity"]=i.quntity
+            return_dict["quantity"]=i.quantity
             return_list.append(return_dict)
         return return_list
 
     def create(self, data):
-        cart = CartItem.query.filter(CartItem.member_id==data['member_id'],CartItem.market_id==data['market_id'],CartItem.product_id==data['product_id']).first()
+        cart = CartItem.query.filter_by(member_id=data['member_id'],market_id=data['market_id'],product_id=data['product_id']).first()
         if not cart:
             new_cart = CartItem(
                 member_id=data['member_id'],
                 market_id=data['market_id'],
                 product_id=data['product_id'],
-                quntity=data['quntity']
+                quantity=data['quantity']
             )
             # print("new cart = ",new_cart)
             save(new_cart)
@@ -49,19 +49,19 @@ class CartItemService:
                 "member_id":data['member_id'],
                 "market_id":data['market_id'],
                 "product_id":data['product_id'],
-                "quntity":data['quntity']
+                "quantity":data['quantity']
             }
 
     def update(self,data):
         cart = CartItem.query.filter(CartItem.member_id==data['member_id'],CartItem.market_id==data['market_id'],CartItem.product_id==data['product_id']).first()
         if cart:
-            cart.quntity=data['quntity']
+            cart.quantity=data['quantity']
             save(cart)
             return{
                 "member_id":data['member_id'],
                 "market_id":data['market_id'],
                 "product_id":data['product_id'],
-                "quntity":data['quntity']
+                "quantity":data['quantity']
             }
 
     def delete_single(self, user_id, market_id, product_id):
@@ -90,7 +90,7 @@ class CartItemService:
                 return_dict['member_id']=i.member_id
                 return_dict["market_id"]=i.market_id
                 return_dict["product_id"]=i.product_id
-                return_dict["quntity"]=i.quntity
+                return_dict["quantity"]=i.quantity
                 delete_cart_list.append(return_dict)
                 delete(i)
             return delete_cart_list
@@ -106,7 +106,7 @@ class CartItemService:
                 return_dict['member_id']=i.member_id
                 return_dict["market_id"]=i.market_id
                 return_dict["product_id"]=i.product_id
-                return_dict["quntity"]=i.quntity
+                return_dict["quantity"]=i.quantity
                 delete_cart_list.append(return_dict)
                 delete(i)
             return delete_cart_list
