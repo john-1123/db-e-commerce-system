@@ -103,7 +103,7 @@
                     <v-btn
                       color="blue-darken-1"
                       variant="tonal"
-                      @click="updateProduct(product.product_id)"
+                      @click="updateProduct()"
                     >
                       Save
                     </v-btn>
@@ -182,6 +182,7 @@ export default defineComponent({
     return {
       dialog: false,
       productList: [] as Product[],
+      selectedProductId: 0,
       marketId: null,
       marketName: "",
     };
@@ -224,6 +225,7 @@ export default defineComponent({
     },
 
     openDialog(product: Product) {
+      this.selectedProductId = product.product_id;
       this.state.product_name = product.product_name;
       this.state.category = product.category;
       this.state.brand = product.brand;
@@ -231,7 +233,7 @@ export default defineComponent({
       this.state.stock = product.stock;
     },
 
-    updateProduct(productId: number) {
+    updateProduct() {
       this.v$.$validate();
       if (!this.v$.$error) {
         const product: UpdateProduct = {
@@ -243,7 +245,7 @@ export default defineComponent({
           status: this.state.status,
         };
 
-        ProductDataService.update(productId, product)
+        ProductDataService.update(this.selectedProductId, product)
           .then((response: any) => {
             console.log(response);
             this.dialog = false;
