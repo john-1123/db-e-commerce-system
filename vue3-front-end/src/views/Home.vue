@@ -173,7 +173,7 @@ export default defineComponent({
         CartDataService.addToCart(data)
           .then((response: any) => {
             console.log(response.data);
-            this.dialog = false;
+            this.close();
           })
           .catch((e: Error) => {
             console.log(e);
