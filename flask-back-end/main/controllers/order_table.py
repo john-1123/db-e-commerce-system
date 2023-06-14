@@ -12,10 +12,6 @@ class CreateOrder(Resource):
     def post(self):
         return service.create(data=request.json)
 
-# class UpdateOrder(Resource):
-#     def put(self):
-#         return service.update(data=request.json)
-
 class DeleteOrder(Resource):
     def delete(self, id):
         return service.delete(order_id=id)
