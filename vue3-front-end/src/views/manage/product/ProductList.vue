@@ -14,12 +14,12 @@
     <v-table>
       <thead>
         <tr>
-          <th>Product Name</th>
-          <th>Category</th>
-          <th>Brand</th>
-          <th>Price</th>
-          <th>Stock</th>
-          <th>Status</th>
+          <th>產品名稱</th>
+          <th>種類</th>
+          <th>品牌</th>
+          <th>價格</th>
+          <th>庫存</th>
+          <th>狀態</th>
           <th>Edit</th>
           <th>Delete</th>
         </tr>

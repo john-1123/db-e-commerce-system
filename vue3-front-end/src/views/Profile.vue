@@ -1,7 +1,7 @@
 <template>
   <v-container class="text-center">
     <v-card elevation="2" tile max-width="500" class="ma-auto">
-      <v-card-title>Profile</v-card-title>
+      <v-card-title>個人資料</v-card-title>
       <v-form class="ma-3">
         <v-text-field
           class="ma-3"
@@ -46,7 +46,7 @@
           @input="v$.phone.$touch"
           @blur="v$.phone.$touch"
         ></v-text-field>
-        <v-btn @click="submitForm">Update</v-btn>
+        <v-btn color="blue" @click="submitForm">Update</v-btn>
       </v-form>
     </v-card>
     <v-dialog v-model="dialog" max-width="500">
@@ -57,7 +57,7 @@
         </v-card-text>
         <v-card-actions>
           <v-row class="justify-end">
-            <v-btn class="mx-3" @click="close">close</v-btn>
+            <v-btn class="mx-3" @click="close">關閉</v-btn>
           </v-row>
         </v-card-actions>
       </v-card>

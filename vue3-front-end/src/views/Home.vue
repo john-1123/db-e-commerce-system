@@ -47,8 +47,9 @@
 
     <v-dialog v-model="dialog" max-width="500">
       <v-card>
-        <v-card-title class="text-h5">Product Detail</v-card-title>
-        <v-card-item> 名稱 : {{ selectedProduct.product_name }} </v-card-item>
+        <v-card-title class="text-h5">{{
+          selectedProduct.product_name
+        }}</v-card-title>
         <v-card-item> 種類 : {{ selectedProduct.category }} </v-card-item>
         <v-card-item> 品牌 : {{ selectedProduct.brand }} </v-card-item>
         <v-card-item> 價格 : {{ selectedProduct.price }} </v-card-item>
@@ -62,16 +63,14 @@
         <v-card-actions>
           <v-row class="justify-end mx-3">
             <v-btn
-              color="blue-darken-1"
+              color="blue"
               variant="tonal"
               @click="addCart"
               prepend-icon="mdi-cart"
             >
               加入購物車
             </v-btn>
-            <v-btn color="blue-darken" variant="tonal" @click="close">
-              Close
-            </v-btn>
+            <v-btn variant="tonal" @click="close"> 關閉 </v-btn>
           </v-row>
         </v-card-actions>
       </v-card>
