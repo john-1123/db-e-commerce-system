@@ -73,7 +73,9 @@ class OrderService:
         save(new_order)
 
         for item in items:
-            print(item['quantity'])
+            product = Product.query.get(item.product_id)
+            product.stock = product.stock - item.quantity
+            save(product)
             delete(item)
 
         return self.order_schema.jsonify(new_order)
