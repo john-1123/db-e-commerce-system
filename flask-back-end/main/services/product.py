@@ -1,10 +1,7 @@
 from flask import jsonify
-
 from main.models._db import delete, save
 from main.models.product import Product
 from main.schemas.product import ProductSchema
-
-# import datetime
 
 class ProductService:
     def __init__(self):

@@ -54,8 +54,7 @@ class OrderService:
                 return "You Buy Too Much"
             else:
                 cost += price * demand
-            
-        ### check 
+        
         new_order = Order_Table(
             member_id = data['member_id'],
             market_id = data['market_id'],

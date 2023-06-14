@@ -6,13 +6,12 @@ import datetime
 class Order_Table(db.Model):
     __tablename__ = 'order_table'
 
-    order_id = db.Column(db.Integer, primary_key=True, autoincrement=True) ### 自動填入
+    order_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     member_id = db.Column(db.Integer, db.ForeignKey('user.user_id'),primary_key=True,nullable=False)
     market_id = db.Column(db.Integer, db.ForeignKey('market.market_id'),primary_key=True,nullable=False)    
     
     state = db.Column(db.String(10), nullable=False)
     create_time = db.Column(db.DateTime, nullable=False) 
-    # last_modified_time = db.Column(db.DateTime, nullable=False)  ## 不modify了
     shipping_address = db.Column(db.String(100), nullable=False)
     consignee = db.Column(db.String(20), nullable=False)
     payment_method = db.Column(db.String(50), nullable=False)
@@ -28,7 +27,6 @@ class Order_Table(db.Model):
         self.market_id=market_id
         self.state=state
         self.create_time=datetime.datetime.now()
-        # self.last_modified_time=datetime.datetime.now()
         self.shipping_address=shipping_address
         self.consignee=consignee
         self.payment_method=payment_method
