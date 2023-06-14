@@ -17,12 +17,12 @@ class Order_Table(db.Model):
     payment_method = db.Column(db.String(50), nullable=False)
     mode_of_transport = db.Column(db.String(50),nullable=False) 
     items = db.Column(db.String(100),nullable=False) 
-    quntities = db.Column(db.String(100),nullable=False) 
+    quantities = db.Column(db.String(100),nullable=False) 
     cashs = db.Column(db.String(100),nullable=False) 
     cost = db.Column(db.Integer,nullable=False)  
 
 
-    def __init__(self,state,shipping_address,consignee,payment_method,mode_of_transport,member_id,market_id,items,quntities,cashs,cost):
+    def __init__(self,state,shipping_address,consignee,payment_method,mode_of_transport,member_id,market_id,items,quantities,cashs,cost):
         self.member_id=member_id
         self.market_id=market_id
         self.state=state
@@ -32,7 +32,7 @@ class Order_Table(db.Model):
         self.payment_method=payment_method
         self.mode_of_transport=mode_of_transport
         self.items = items
-        self.quntities = quntities
+        self.quantities = quantities
         self.cashs = cashs
         self.cost = cost
         
