@@ -1,5 +1,4 @@
 from main.models._db import save, delete
-from flask import jsonify
 from main.models.cart import Cart
 from main.models.order_table import Order_Table
 from main.schemas.cart import CartSchema
