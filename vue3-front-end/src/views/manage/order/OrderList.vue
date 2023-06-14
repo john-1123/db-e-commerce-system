@@ -11,7 +11,7 @@
           <th>收貨人</th>
           <th>小計</th>
           <th></th>
-          <th></th>
+          <!-- <th></th> -->
         </tr>
       </thead>
       <tbody>
@@ -24,9 +24,9 @@
           <td>
             <v-icon icon="fa:fas fa-edit" @click="detail(order)"></v-icon>
           </td>
-          <td>
+          <!-- <td>
             <v-icon icon="fa:fas fa-trash" @click="deleteOrder(order)"></v-icon>
-          </td>
+          </td> -->
         </tr>
       </tbody>
     </v-table>
@@ -59,7 +59,7 @@
           <v-card-item> 小計 : {{ selectedOrder.cost }} 元 </v-card-item>
           <v-card-item> 訂單狀態 : {{ selectedOrder.state }} </v-card-item>
         </v-card-text>
-        <v-card-actions class="d-flex justify-end">
+        <v-card-actions class="justify-end">
           <v-btn variant="tonal" color="blue" @click="checkOrder"
             >確認訂單
           </v-btn>

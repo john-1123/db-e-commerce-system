@@ -72,7 +72,7 @@
         <v-text-field
           class="my-3"
           v-model="state.consignee"
-          label="Consignee"
+          label="收貨人"
           :error-messages="v$.consignee.$errors.map((e: any) => e.$message)"
           @input="v$.consignee.$touch"
           @blur="v$.consignee.$touch"
@@ -81,7 +81,7 @@
         <v-text-field
           class="my-3"
           v-model="state.shippingAddress"
-          label="Shipping Address"
+          label="運送地址"
           :error-messages="v$.shippingAddress.$errors.map((e: any) => e.$message)"
           @input="v$.shippingAddress.$touch"
           @blur="v$.shippingAddress.$touch"
@@ -91,19 +91,21 @@
           class="my-3"
           v-model="state.modeOfTransport"
           :items="transportList"
-          label="Mode of Transport"
+          label="運送方式"
         ></v-select>
 
         <v-select
           class="my-3"
           v-model="state.paymentMethod"
           :items="paymentList"
-          label="Payment method"
+          label="付款方式"
         ></v-select>
 
-        <v-card-actions class="justify-space-between">
-          <v-btn color="blue-lighten-1" @click="onSubmit">Submit</v-btn>
-          <v-btn @click="close">Close</v-btn>
+        <v-card-actions class="justify-end">
+          <v-btn variant="tonal" color="blue-lighten-1" @click="onSubmit"
+            >提交</v-btn
+          >
+          <v-btn variant="tonal" @click="close">關閉</v-btn>
         </v-card-actions>
       </v-card-text>
     </v-card>

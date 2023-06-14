@@ -52,7 +52,7 @@
           </v-card-item>
           <v-card-item> 小計 : {{ selectedOrder.cost }} 元 </v-card-item>
         </v-card-text>
-        <v-card-actions class="d-flex justify-end">
+        <v-card-actions class="justify-end">
           <v-btn variant="tonal" color="blue" @click="checkOrder"
             >訂單已完成
           </v-btn>

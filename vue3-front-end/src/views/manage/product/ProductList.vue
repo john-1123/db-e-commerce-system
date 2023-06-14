@@ -53,7 +53,7 @@
                       <v-col cols="12">
                         <v-text-field
                           v-model="state.product_name"
-                          label="Name"
+                          label="產品名稱"
                           :error-messages="v$.product_name.$errors.map((e: any) => e.$message)"
                           @input="v$.product_name.$touch"
                           @blur="v$.product_name.$touch"
@@ -62,7 +62,7 @@
                       <v-col cols="12" sm="6" md="6">
                         <v-text-field
                           v-model="state.category"
-                          label="Category*"
+                          label="種類"
                           :error-messages="v$.category.$errors.map((e: any) => e.$message)"
                           @input="v$.category.$touch"
                           @blur="v$.category.$touch"
@@ -71,7 +71,7 @@
                       <v-col cols="12" sm="6" md="6">
                         <v-text-field
                           v-model="state.brand"
-                          label="Brand*"
+                          label="品牌"
                           :error-messages="v$.brand.$errors.map((e: any) => e.$message)"
                           @input="v$.brand.$touch"
                           @blur="v$.brand.$touch"
@@ -80,7 +80,7 @@
                       <v-col cols="12">
                         <v-text-field
                           v-model="state.price"
-                          label="Price*"
+                          label="價格"
                           :error-messages="v$.price.$errors.map((e: any) => e.$message)"
                           @input="v$.price.$touch"
                           @blur="v$.price.$touch"
@@ -89,7 +89,7 @@
                       <v-col cols="12">
                         <v-text-field
                           v-model="state.stock"
-                          label="Stock*"
+                          label="庫存"
                           :error-messages="v$.stock.$errors.map((e: any) => e.$message)"
                           @input="v$.stock.$touch"
                           @blur="v$.stock.$touch"
@@ -105,14 +105,14 @@
                       variant="tonal"
                       @click="updateProduct()"
                     >
-                      Save
+                      儲存
                     </v-btn>
                     <v-btn
                       color="blue-darken"
                       variant="tonal"
                       @click="dialog = false"
                     >
-                      Close
+                      關閉
                     </v-btn>
                   </v-row>
                 </v-card-actions>
