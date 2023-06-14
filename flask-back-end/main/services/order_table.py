@@ -64,7 +64,7 @@ class OrderService:
             payment_method = data['payment_method'],
             mode_of_transport = data['mode_of_transport'],
             items = ",".join(items_list),
-            quntities = ",".join(quantity_list),
+            quantities = ",".join(quantity_list),
             cashs = ",".join(cash_list),
             cost = cost
         )
@@ -82,5 +82,11 @@ class OrderService:
     def delete(self, order_id):
         order = Order_Table.query.filter_by(order_id = order_id).first()
         if order:
+            item_list = order.items.split(",")
+            quantity_list = order.quantities.split(",")
+            for index, item in enumerate(item_list):
+                product = Product.query.filter_by(product_name = item).first()
+                product.stock = product.stock + int(quantity_list[index])
+                save(product)
             delete(order)
             return self.order_schema.jsonify(order)
