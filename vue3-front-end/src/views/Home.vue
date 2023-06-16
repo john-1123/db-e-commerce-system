@@ -17,7 +17,10 @@
           <v-card>
             <v-card-title>{{ product.product_name }}</v-card-title>
             <v-card-subtitle>{{ product.brand }}</v-card-subtitle>
-            <v-card-title>價格: NTD$ {{ product.price }}</v-card-title>
+            <v-card-title
+              >價格: NTD$
+              {{ product.price.toLocaleString("zh-TW") }}</v-card-title
+            >
             <v-card-actions>
               <v-btn
                 rounded="lg"
@@ -38,7 +41,9 @@
         <v-card-title>{{ selectedProduct.product_name }}</v-card-title>
         <v-card-item> 種類 : {{ selectedProduct.category }} </v-card-item>
         <v-card-item> 品牌 : {{ selectedProduct.brand }} </v-card-item>
-        <v-card-item> 價格 : {{ selectedProduct.price }} </v-card-item>
+        <v-card-item>
+          價格 : {{ selectedProduct.price.toLocaleString("zh-TW") }}
+        </v-card-item>
         <v-card-item> 庫存 : {{ selectedProduct.stock }} </v-card-item>
         <v-text-field
           class="ma-5"

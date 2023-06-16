@@ -39,7 +39,7 @@
           </td>
           <td>
             <v-btn
-              color="deep-orange-lighten-3"
+              color="orange-lighten-1"
               @click="openDialog(product), (dialog = true)"
             >
               <v-icon icon="fa:fas fa-edit"></v-icon>

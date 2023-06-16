@@ -17,7 +17,7 @@
           <td>{{ order.order_id }}</td>
           <td>{{ order.state }}</td>
           <td>{{ order.create_time }}</td>
-          <td>{{ order.cost }}</td>
+          <td>NTD$ {{ order.cost.toLocaleString("zh-TW") }}</td>
           <td>
             <v-icon icon="fa:fas fa-edit" @click="detail(order)"></v-icon>
           </td>
@@ -51,7 +51,9 @@
             購買細項 :
             <v-list :items="getItemList()"></v-list>
           </v-card-item>
-          <v-card-item> 小計 : {{ selectedOrder.cost }} 元 </v-card-item>
+          <v-card-item>
+            小計 : {{ selectedOrder.cost.toLocaleString("zh-TW") }} 元
+          </v-card-item>
         </v-card-text>
         <v-card-actions class="justify-end">
           <v-btn variant="tonal" color="blue" @click="checkOrder"

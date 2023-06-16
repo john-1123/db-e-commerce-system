@@ -20,7 +20,7 @@
           <td>{{ order.state }}</td>
           <td>{{ order.create_time }}</td>
           <td>{{ order.consignee }}</td>
-          <td>{{ order.cost }}</td>
+          <td>NTD$ {{ order.cost.toLocaleString("zh-TW") }}</td>
           <td>
             <v-icon icon="fa:fas fa-edit" @click="detail(order)"></v-icon>
           </td>
@@ -56,7 +56,9 @@
             購買細項 :
             <v-list :items="getItemList()"></v-list>
           </v-card-item>
-          <v-card-item> 小計 : {{ selectedOrder.cost }} 元 </v-card-item>
+          <v-card-item>
+            小計 : NTD$ {{ selectedOrder.cost.toLocaleString("zh-TW") }} 元
+          </v-card-item>
           <v-card-item> 訂單狀態 : {{ selectedOrder.state }} </v-card-item>
         </v-card-text>
         <v-card-actions class="justify-end">
@@ -139,7 +141,9 @@ export default defineComponent({
       const cashList = this.selectedOrder.cashs.split(",");
       for (let i = 0; i < productList.length; i++) {
         itemList.push(
-          `${productList[i]}, ${quantityList[i]}個, ${cashList[i]}元`
+          `${productList[i]} / ${quantityList[i]}個 / ${Number(
+            cashList[i]
+          ).toLocaleString("zh-TW")}元`
         );
       }
       return itemList;
