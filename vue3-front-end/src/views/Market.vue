@@ -23,6 +23,22 @@
       </template>
     </v-row>
 
+    <v-dialog v-model="alertDialog" max-width="500">
+      <v-card>
+        <v-card-title> 提示訊息 </v-card-title>
+        <v-card-text>
+          {{ message }}
+        </v-card-text>
+        <v-card-actions>
+          <v-row class="justify-end">
+            <v-btn class="mx-3" variant="tonal" @click="alertDialog = false"
+              >關閉</v-btn
+            >
+          </v-row>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
     <v-dialog v-model="dialog" max-width="500">
       <v-card>
         <v-card-title class="text-h5">{{
@@ -45,7 +61,7 @@
               color="blue-darken-1"
               variant="tonal"
               prepend-icon="mdi-cart"
-              @click="addCart"
+              @click="addToCart"
             >
               加入購物車
             </v-btn>
@@ -59,7 +75,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import Product from "../models/product/product";
 import ProductDataService from "../services/ProductDataService";
 import AddtoCart from "../models/cart/add-to-cart";
@@ -69,7 +85,8 @@ import MarketDataService from "../services/MarketDataService";
 export default defineComponent({
   setup() {
     const route = useRoute();
-    return { route };
+    const router = useRouter();
+    return { route, router };
   },
 
   data() {
@@ -79,6 +96,8 @@ export default defineComponent({
       dialog: false,
       quantity: 1,
       marketName: "",
+      alertDialog: false,
+      message: "",
     };
   },
 
@@ -106,7 +125,12 @@ export default defineComponent({
       this.dialog = true;
     },
 
-    addCart() {
+    addToCart() {
+      if (this.quantity > this.selectedProduct.stock) {
+        this.message = "不可以超過庫存數量 !";
+        this.alertDialog = true;
+        return;
+      }
       const user_id = Number(sessionStorage.getItem("user"));
       if (user_id) {
         const data: AddtoCart = {
@@ -123,6 +147,8 @@ export default defineComponent({
           .catch((e: Error) => {
             console.log(e);
           });
+      } else {
+        this.router.push("/sign-in");
       }
     },
 

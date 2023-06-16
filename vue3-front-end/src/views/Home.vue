@@ -195,6 +195,8 @@ export default defineComponent({
           .catch((e: Error) => {
             console.log(e);
           });
+      } else {
+        this.router.push("/sign-in");
       }
     },
 
