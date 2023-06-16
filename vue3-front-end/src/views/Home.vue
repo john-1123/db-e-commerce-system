@@ -2,7 +2,7 @@
   <v-container>
     <h1 class="text-center">E-COMMERCE</h1>
     <v-card class="ma-5" v-for="market in getGroupByMarket()">
-      <v-row class="justify-space-around">
+      <v-row class="justify-center">
         <v-col cols="12">
           <v-chip
             class="mx-3 mt-3"
