@@ -3,7 +3,11 @@
     <h1>{{ marketName }}</h1>
     <v-row class="justify-center">
       <template v-for="product in productList">
-        <v-col cols="3" class="ma-3 text-start" v-if="product.status == false">
+        <v-col
+          cols="3"
+          class="ma-3 text-start"
+          v-if="product.status == false && product.stock != 0"
+        >
           <v-card>
             <v-card-title>{{ product.product_name }}</v-card-title>
             <v-card-subtitle>{{ product.brand }}</v-card-subtitle>
