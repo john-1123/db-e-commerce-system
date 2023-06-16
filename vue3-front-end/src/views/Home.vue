@@ -176,7 +176,6 @@ export default defineComponent({
       return array.reduce((result: any, currentValue: any) => {
         // If an array already present for key, push it to the array. Else create an array and push the object
         // (result[currentValue[key]] = result[currentValue[key]] || []).push(currentValue);
-        console.log(currentValue);
         if (!currentValue.status && currentValue.stock != 0) {
           const group = result[currentValue[key]] || [];
           if (group.length < 3) {
