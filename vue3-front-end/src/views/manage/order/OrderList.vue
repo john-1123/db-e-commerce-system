@@ -62,7 +62,11 @@
           <v-card-item> 訂單狀態 : {{ selectedOrder.state }} </v-card-item>
         </v-card-text>
         <v-card-actions class="justify-end">
-          <v-btn variant="tonal" color="blue" @click="checkOrder"
+          <v-btn
+            v-if="!isDelivered"
+            variant="tonal"
+            color="blue"
+            @click="checkOrder"
             >確認訂單
           </v-btn>
           <v-btn variant="tonal" @click="dialog = false">關閉</v-btn>
@@ -93,6 +97,7 @@ export default defineComponent({
       dialog: false,
       marketId: null,
       marketName: "",
+      isDelivered: false,
     };
   },
   mounted() {
@@ -121,6 +126,7 @@ export default defineComponent({
 
     detail(order: Order) {
       this.selectedOrder = order;
+      this.isDelivered = this.selectedOrder.state == OrderState.配送中;
       this.dialog = true;
     },
 

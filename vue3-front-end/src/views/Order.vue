@@ -56,7 +56,11 @@
           </v-card-item>
         </v-card-text>
         <v-card-actions class="justify-end">
-          <v-btn variant="tonal" color="blue" @click="checkOrder"
+          <v-btn
+            variant="tonal"
+            color="blue"
+            :disabled="isDisabled"
+            @click="checkOrder"
             >訂單已完成
           </v-btn>
           <v-btn variant="tonal" @click="dialog = false">關閉</v-btn>
@@ -96,6 +100,7 @@ export default defineComponent({
       dialog: false,
       alertDialog: false,
       message: "",
+      isDisabled: false,
     };
   },
 
@@ -109,7 +114,6 @@ export default defineComponent({
       if (userId) {
         OrderDataService.getByUser(userId)
           .then((response: any) => {
-            console.log(response.data);
             this.orderList = response.data;
           })
           .catch((e: Error) => {
@@ -120,6 +124,8 @@ export default defineComponent({
 
     detail(order: Order) {
       this.selectedOrder = order;
+      console.log(this.selectedOrder.state == OrderState.配送中);
+      this.isDisabled = this.selectedOrder.state != OrderState.配送中;
       this.dialog = true;
     },
 
@@ -133,7 +139,6 @@ export default defineComponent({
       if (this.selectedOrder.state == OrderState.待確認) {
         OrderDataService.delete(this.selectedOrder.order_id)
           .then((response: any) => {
-            console.log(response.data);
             this.alertDialog = false;
             this.message = "";
             this.getOrders();
