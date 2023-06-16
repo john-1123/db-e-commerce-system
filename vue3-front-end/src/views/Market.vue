@@ -50,10 +50,12 @@
         <v-card-item> 庫存 : {{ selectedProduct.stock }} </v-card-item>
         <v-text-field
           class="ma-5"
-          v-model="quantity"
+          v-model="state.quantity"
           type="number"
           label="數量"
-          max="selectedProduct.stock"
+          :error-messages="v$.quantity.$errors.map((e: any) => e.$message)"
+          @input="v$.quantity.$touch"
+          @blur="v$.quantity.$touch"
         ></v-text-field>
         <v-card-actions>
           <v-row class="justify-end mx-3">
@@ -74,19 +76,37 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import useValidate from "@vuelidate/core";
+import { minValue, required } from "@vuelidate/validators";
+import { computed, defineComponent, reactive } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import Product from "../models/product/product";
-import ProductDataService from "../services/ProductDataService";
 import AddtoCart from "../models/cart/add-to-cart";
+import Product from "../models/product/product";
 import CartDataService from "../services/CartDataService";
 import MarketDataService from "../services/MarketDataService";
+import ProductDataService from "../services/ProductDataService";
 
 export default defineComponent({
   setup() {
     const route = useRoute();
     const router = useRouter();
-    return { route, router };
+
+    const state = reactive({
+      quantity: 1,
+    });
+
+    const rules = computed(() => {
+      return {
+        quantity: {
+          required,
+          minValue: minValue(1),
+        },
+      };
+    });
+
+    const v$ = useValidate(rules, state);
+
+    return { route, router, state, v$ };
   },
 
   data() {
@@ -94,7 +114,6 @@ export default defineComponent({
       productList: [] as Product[],
       selectedProduct: {} as Product,
       dialog: false,
-      quantity: 1,
       marketName: "",
       alertDialog: false,
       message: "",
@@ -126,35 +145,38 @@ export default defineComponent({
     },
 
     addToCart() {
-      if (this.quantity > this.selectedProduct.stock) {
-        this.message = "不可以超過庫存數量 !";
-        this.alertDialog = true;
-        return;
-      }
-      const user_id = Number(sessionStorage.getItem("user"));
-      if (user_id) {
-        const data: AddtoCart = {
-          member_id: user_id,
-          market_id: this.selectedProduct.market_id,
-          product_id: this.selectedProduct.product_id,
-          quantity: this.quantity,
-        };
-        CartDataService.addToCart(data)
-          .then((response: any) => {
-            console.log(response.data);
-            this.dialog = false;
-          })
-          .catch((e: Error) => {
-            console.log(e);
-          });
-      } else {
-        this.router.push("/sign-in");
+      this.v$.$validate();
+      if (!this.v$.$error) {
+        if (this.state.quantity > this.selectedProduct.stock) {
+          this.message = "不可以超過庫存數量 !";
+          this.alertDialog = true;
+          return;
+        }
+        const user_id = Number(sessionStorage.getItem("user"));
+        if (user_id) {
+          const data: AddtoCart = {
+            member_id: user_id,
+            market_id: this.selectedProduct.market_id,
+            product_id: this.selectedProduct.product_id,
+            quantity: this.state.quantity,
+          };
+          CartDataService.addToCart(data)
+            .then((response: any) => {
+              console.log(response.data);
+              this.dialog = false;
+            })
+            .catch((e: Error) => {
+              console.log(e);
+            });
+        } else {
+          this.router.push("/sign-in");
+        }
       }
     },
 
     close() {
       this.dialog = false;
-      this.quantity = 1;
+      this.state.quantity = 1;
     },
   },
 
