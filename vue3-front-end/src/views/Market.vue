@@ -2,11 +2,11 @@
   <v-container class="text-center">
     <h1>{{ marketName }}</h1>
     <v-row class="justify-center">
-      <v-col cols="3" v-for="product in productList" class="ma-3 text-start">
+      <v-col v-for="product in productList" class="ma-3 text-start">
         <v-card>
           <v-card-title>{{ product.product_name }}</v-card-title>
           <v-card-subtitle>{{ product.brand }}</v-card-subtitle>
-          <v-card-title>Price: ${{ product.price }}</v-card-title>
+          <v-card-title>價格: NTD$ {{ product.price }}</v-card-title>
           <v-card-actions>
             <v-btn
               rounded="lg"
@@ -35,6 +35,7 @@
           v-model="quantity"
           type="number"
           label="數量"
+          max="selectedProduct.stock"
         ></v-text-field>
         <v-card-actions>
           <v-row class="justify-end mx-3">
