@@ -29,7 +29,7 @@
 </template>
 <script lang="ts">
 import useValidate from "@vuelidate/core";
-import { required } from "@vuelidate/validators";
+import { required, email } from "@vuelidate/validators";
 import { computed, defineComponent, reactive } from "vue";
 import { useRouter } from "vue-router";
 
@@ -49,7 +49,7 @@ export default defineComponent({
 
     const rules = computed(() => {
       return {
-        email: { required },
+        email: { required, email },
         password: { required },
       };
     });
@@ -74,7 +74,7 @@ export default defineComponent({
         AuthService.login(user)
           .then((response: any) => {
             console.log(response);
-            this.authStore.commit("login", response['data']);
+            this.authStore.commit("login", response["data"]);
             this.router.push("/home");
           })
           .catch((e: Error) => {
