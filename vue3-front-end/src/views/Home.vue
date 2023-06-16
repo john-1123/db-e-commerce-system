@@ -53,7 +53,7 @@
             <v-btn
               color="blue"
               variant="tonal"
-              @click="addCart"
+              @click="addToCart"
               prepend-icon="mdi-cart"
             >
               加入購物車
@@ -151,7 +151,7 @@ export default defineComponent({
       this.dialog = true;
     },
 
-    addCart() {
+    addToCart() {
       const user_id = Number(sessionStorage.getItem("user"));
       if (user_id) {
         const data: AddtoCart = {
@@ -162,8 +162,8 @@ export default defineComponent({
         };
         CartDataService.addToCart(data)
           .then((response: any) => {
-            console.log(response.data);
             this.close();
+            this.router.push("/carts");
           })
           .catch((e: Error) => {
             console.log(e);

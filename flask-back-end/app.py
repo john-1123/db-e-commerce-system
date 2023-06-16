@@ -51,29 +51,15 @@ api.add_resource(CreateMarket, '/markets')
 api.add_resource(UpdateMarket, '/markets/<int:id>')
 api.add_resource(DeleteMarket, '/markets/<int:id>')
 
-
-# cart_item api
-# in json <member_id=,market_id=,product_id=,qauntity=>
-# in method <get,post,delete,put>
-# api.add_resource(GetCartItem,'/cart/product')
+# cart api
 api.add_resource(AddCartItem, '/cart/product')
 api.add_resource(DeleteCartItem, '/cart/<int:user_id>/<int:market_id>/<int:product_id>')
 api.add_resource(ReviseCartItem, '/cart/product')
 api.add_resource(GetAllCartByMember, '/cart/<int:id>')
-# api.add_resource(DeleteAllCartItem,'/cart/product/all') #
 api.add_resource(DeleteAllCartItemByMember, '/cart/product/all/member')
 api.add_resource(DeleteAllCartItemByMarket, '/cart/product/all/market')
 
-# cart api
-# in json <member_id=,market_id=,order_id=>
-# in method <get,post,delete>
-# api.add_resource(GetCart,'/cart')
-# api.add_resource(CreateCart,'/cart')
-# api.add_resource(DeleteCart,'/cart')
-
 # order api
-# in json <order_id=,state=,shipping_address,payment_method,mode_of_transport>
-# in method <get,post,delete>
 api.add_resource(GetOrder, '/order')
 api.add_resource(CreateOrder, '/order')
 api.add_resource(UpdateOrder, '/order/<int:id>')
