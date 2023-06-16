@@ -26,11 +26,13 @@ migrate = Migrate(app, db)
 
 # api
 api.add_resource(HelloWorld, '/')
+
 # user api
 api.add_resource(GetAllUser, '/users')
 api.add_resource(GetUser, '/users/<int:id>')
 api.add_resource(UpdateUser, '/users/<int:id>')
 api.add_resource(DeleteUser, '/users/<int:id>')
+
 # auth api
 api.add_resource(AuthLogin, '/login')
 api.add_resource(AuthSignUp, '/signup')
