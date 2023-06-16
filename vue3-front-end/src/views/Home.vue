@@ -2,9 +2,10 @@
   <v-container>
     <h1 class="text-center">E-COMMERCE</h1>
     <v-card class="ma-5" v-for="market in getGroupByMarket()">
-      <v-row class="justify-start text-left" no-gutters>
-        <v-col cols="12" class="ma-3">
+      <v-row class="justify-space-around">
+        <v-col cols="12">
           <v-chip
+            class="mx-3 mt-3"
             size="x-large"
             append-icon="mdi-arrow-right"
             @click="goMarket(market[0].market_id)"
@@ -12,7 +13,7 @@
             {{ getMarketName(market[0].market_id) }}
           </v-chip>
         </v-col>
-        <v-col class="ma-3" v-for="product in market">
+        <v-col cols="3" class="ma-3" v-for="product in market">
           <v-card>
             <v-card-title>{{ product.product_name }}</v-card-title>
             <v-card-subtitle>{{ product.brand }}</v-card-subtitle>

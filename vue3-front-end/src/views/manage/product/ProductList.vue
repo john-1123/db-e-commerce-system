@@ -60,13 +60,11 @@
                         ></v-text-field>
                       </v-col>
                       <v-col cols="12" sm="6" md="6">
-                        <v-text-field
+                        <v-select
                           v-model="state.category"
+                          :items="categoryList"
                           label="種類"
-                          :error-messages="v$.category.$errors.map((e: any) => e.$message)"
-                          @input="v$.category.$touch"
-                          @blur="v$.category.$touch"
-                        ></v-text-field>
+                        ></v-select>
                       </v-col>
                       <v-col cols="12" sm="6" md="6">
                         <v-text-field
@@ -156,12 +154,12 @@ export default defineComponent({
 
     const state = reactive({
       product_name: "",
-      category: "",
+      category: PrdouctCategory.運動健身,
       brand: "",
       price: 0,
       stock: 0,
       status: false,
-    } as UpdateProduct);
+    });
 
     const rules = computed(() => {
       return {
@@ -178,7 +176,7 @@ export default defineComponent({
 
     const categoryList = Object.values(PrdouctCategory);
 
-    return { router, state, v$ };
+    return { router, state, v$, categoryList };
   },
 
   data() {
@@ -230,7 +228,9 @@ export default defineComponent({
     openDialog(product: Product) {
       this.selectedProductId = product.product_id;
       this.state.product_name = product.product_name;
-      this.state.category = product.category;
+      this.state.category = Object.values(PrdouctCategory).find(
+        (val: string) => val == product.category
+      )!;
       this.state.brand = product.brand;
       this.state.price = product.price;
       this.state.stock = product.stock;
@@ -267,7 +267,7 @@ export default defineComponent({
     deleteProduct(productId: number) {
       ProductDataService.delete(productId)
         .then((response: any) => {
-          console.log(response);
+          this.getProducts();
         })
         .catch((e) => {
           console.log(e);

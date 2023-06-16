@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <h1 class="text-center ma-3">Cart List</h1>
+    <h1 class="ma-3 text-center">E-COMMERCE | 購物車</h1>
     <v-row class="mx-3 my-5" v-for="market in getGroupByMarket()">
       <v-col cols="12" class="d-flex">
         <h2>{{ getMarketName(market[0].market_id) }}</h2>
@@ -52,9 +52,9 @@
         </v-table>
       </v-col>
     </v-row>
-    <v-row v-if="cartList.length == 0">
+    <v-row class="my-5" v-if="cartList.length == 0">
       <v-card width="500" class="ma-auto">
-        <v-card-title>購物車是空的~~</v-card-title>
+        <v-card-title>你的購物車還是空的</v-card-title>
         <v-card-actions>
           <v-btn color="blue-lighten-1" @click="goHome">趕緊購物去!</v-btn>
         </v-card-actions>
