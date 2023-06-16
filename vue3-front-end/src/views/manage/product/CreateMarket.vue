@@ -1,15 +1,15 @@
 <template>
     <v-container class="text-center">
         <v-card elevation="2" tile max-width="500" class="ma-auto">
-            <v-card-title>Create Market</v-card-title>
+            <v-card-title>建立市場</v-card-title>
             <v-form class="ma-3">
-                <v-text-field class="ma-3" v-model="state.market_name" label="Market Name"
+                <v-text-field class="ma-3" v-model="state.market_name" label="市場名稱"
                     :error-messages="v$.market_name.$errors.map((e: any) => e.$message)" 
                     @input="v$.market_name.$touch"
                     @blur="v$.market_name.$touch">
                 </v-text-field>
             </v-form>
-            <v-btn class="ma-3" @click="submitForm">Create</v-btn>
+            <v-btn class="ma-3" color="blue-lighten-1" @click="submitForm">建立市場</v-btn>
         </v-card>
     </v-container>
 </template>

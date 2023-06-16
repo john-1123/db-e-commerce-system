@@ -1,12 +1,12 @@
 <template>
   <v-container>
     <v-card elevation="2" tile max-width="500" class="ma-auto">
-      <v-card-title>Add Product</v-card-title>
+      <v-card-title>新增商品</v-card-title>
       <v-form class="ma-3">
         <v-text-field
           class="ma-3"
           v-model="state.product_name"
-          label="Name*"
+          label="商品名稱"
           :error-messages="v$.product_name.$errors.map((e: any) => e.$message)"
           @input="v$.product_name.$touch"
           @blur="v$.product_name.$touch"
@@ -16,13 +16,13 @@
           class="ma-3"
           v-model="state.category"
           :items="categoryList"
-          label="Category*"
+          label="種類"
         ></v-select>
 
         <v-text-field
           class="ma-3"
           v-model="state.brand"
-          label="Brand*"
+          label="品牌"
           :error-messages="v$.brand.$errors.map((e: any) => e.$message)"
           @input="v$.brand.$touch"
           @blur="v$.brand.$touch"
@@ -31,7 +31,7 @@
         <v-text-field
           class="ma-3"
           v-model="state.price"
-          label="Price*"
+          label="價格"
           :error-messages="v$.price.$errors.map((e: any) => e.$message)"
           @input="v$.price.$touch"
           @blur="v$.price.$touch"
@@ -40,14 +40,18 @@
         <v-text-field
           class="ma-3"
           v-model="state.stock"
-          label="Stock*"
+          label="庫存"
           :error-messages="v$.stock.$errors.map((e: any) => e.$message)"
           @input="v$.stock.$touch"
           @blur="v$.stock.$touch"
         ></v-text-field>
-        <v-btn class="ma-3" color="blue-lighten-1" @click="saveProduct"
-          >Add Product!</v-btn
-        >
+        <v-card-actions class="justify-end">
+          <v-btn class="ma-3"
+            variant="tonal"
+            color="blue-lighten-1" 
+            @click="saveProduct">新增商品
+          </v-btn>
+        </v-card-actions>
       </v-form>
     </v-card>
   </v-container>

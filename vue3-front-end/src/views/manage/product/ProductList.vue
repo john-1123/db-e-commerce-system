@@ -46,14 +46,14 @@
             </v-btn>
             <v-dialog v-model="dialog" persistent width="1024">
               <v-card>
-                <v-card-title class="text-h5"> Edit Product </v-card-title>
+                <v-card-title class="text-h5">編輯商品</v-card-title>
                 <v-card-text>
                   <v-container>
                     <v-row>
                       <v-col cols="12">
                         <v-text-field
                           v-model="state.product_name"
-                          label="產品名稱"
+                          label="商品名稱"
                           :error-messages="v$.product_name.$errors.map((e: any) => e.$message)"
                           @input="v$.product_name.$touch"
                           @blur="v$.product_name.$touch"
