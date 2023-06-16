@@ -32,7 +32,7 @@ class CartItemService:
             save(cart)
             return self.cart_schema.jsonify(cart)
         else:
-            cart.quantity += data['quantity']
+            cart.quantity += int(data['quantity'])
             save(cart)
             return self.cart_schema.jsonify(cart)
 

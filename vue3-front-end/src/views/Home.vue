@@ -35,9 +35,7 @@
 
     <v-dialog v-model="dialog" max-width="500">
       <v-card>
-        <v-card-title class="text-h5">{{
-          selectedProduct.product_name
-        }}</v-card-title>
+        <v-card-title>{{ selectedProduct.product_name }}</v-card-title>
         <v-card-item> 種類 : {{ selectedProduct.category }} </v-card-item>
         <v-card-item> 品牌 : {{ selectedProduct.brand }} </v-card-item>
         <v-card-item> 價格 : {{ selectedProduct.price }} </v-card-item>
@@ -48,17 +46,31 @@
           type="number"
           label="數量"
         ></v-text-field>
+        <v-card-actions class="justify-end ma-3">
+          <v-btn
+            color="blue"
+            variant="tonal"
+            @click="addToCart"
+            prepend-icon="mdi-cart"
+          >
+            加入購物車
+          </v-btn>
+          <v-btn variant="tonal" @click="close"> 關閉 </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <v-dialog v-model="alertDialog" max-width="500">
+      <v-card>
+        <v-card-title> 提示訊息 </v-card-title>
+        <v-card-text>
+          {{ message }}
+        </v-card-text>
         <v-card-actions>
-          <v-row class="justify-end mx-3">
-            <v-btn
-              color="blue"
-              variant="tonal"
-              @click="addToCart"
-              prepend-icon="mdi-cart"
+          <v-row class="justify-end">
+            <v-btn class="mx-3" variant="tonal" @click="alertDialog = false"
+              >關閉</v-btn
             >
-              加入購物車
-            </v-btn>
-            <v-btn variant="tonal" @click="close"> 關閉 </v-btn>
           </v-row>
         </v-card-actions>
       </v-card>
@@ -88,6 +100,8 @@ export default defineComponent({
       dialog: false,
       selectedProduct: {} as Product,
       quantity: 1,
+      alertDialog: false,
+      message: "",
     };
   },
   methods: {
@@ -152,6 +166,11 @@ export default defineComponent({
     },
 
     addToCart() {
+      if (this.quantity > this.selectedProduct.stock) {
+        this.message = "不可以超過庫存數量 !";
+        this.alertDialog = true;
+        return;
+      }
       const user_id = Number(sessionStorage.getItem("user"));
       if (user_id) {
         const data: AddtoCart = {

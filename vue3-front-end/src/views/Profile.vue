@@ -49,6 +49,7 @@
         <v-btn color="blue" @click="submitForm">Update</v-btn>
       </v-form>
     </v-card>
+
     <v-dialog v-model="dialog" max-width="500">
       <v-card>
         <v-card-title> 提示訊息 </v-card-title>
@@ -57,7 +58,7 @@
         </v-card-text>
         <v-card-actions>
           <v-row class="justify-end">
-            <v-btn class="mx-3" @click="close">關閉</v-btn>
+            <v-btn class="mx-3" variant="tonal" @click="close">關閉</v-btn>
           </v-row>
         </v-card-actions>
       </v-card>
@@ -132,7 +133,7 @@ export default defineComponent({
         };
         UserDataService.update(this.user_id, user)
           .then((response: any) => {
-            this.message = "Update User Successfully!";
+            this.message = "成功更新使用者資訊 !";
             this.dialog = true;
           })
           .catch((e: Error) => {
