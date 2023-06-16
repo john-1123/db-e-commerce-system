@@ -32,6 +32,7 @@
           class="ma-3"
           v-model="state.price"
           label="價格"
+          type="number"
           :error-messages="v$.price.$errors.map((e: any) => e.$message)"
           @input="v$.price.$touch"
           @blur="v$.price.$touch"
@@ -41,6 +42,7 @@
           class="ma-3"
           v-model="state.stock"
           label="庫存"
+          type="number"
           :error-messages="v$.stock.$errors.map((e: any) => e.$message)"
           @input="v$.stock.$touch"
           @blur="v$.stock.$touch"
@@ -58,7 +60,7 @@
 
 <script lang="ts">
 import useValidate from "@vuelidate/core";
-import { required } from "@vuelidate/validators";
+import { required, minValue } from "@vuelidate/validators";
 import { computed, defineComponent, reactive } from "vue";
 import { useRouter } from "vue-router";
 import { CreateProduct } from "../../../models/product/create-product";
@@ -86,8 +88,8 @@ export default defineComponent({
         product_name: { required },
         category: { required },
         brand: { required },
-        price: { required },
-        stock: { required },
+        price: { required, minValue: minValue(0) },
+        stock: { required, minValue: minValue(1) },
       };
     });
 
