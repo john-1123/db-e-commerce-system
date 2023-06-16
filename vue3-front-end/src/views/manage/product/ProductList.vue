@@ -44,89 +44,93 @@
             >
               <v-icon icon="fa:fas fa-edit"></v-icon>
             </v-btn>
-            <v-dialog v-model="dialog" persistent width="1024">
-              <v-card>
-                <v-card-title class="text-h5">編輯商品</v-card-title>
-                <v-card-text>
-                  <v-container>
-                    <v-row>
-                      <v-col cols="12">
-                        <v-text-field
-                          v-model="state.product_name"
-                          label="商品名稱"
-                          :error-messages="v$.product_name.$errors.map((e: any) => e.$message)"
-                          @input="v$.product_name.$touch"
-                          @blur="v$.product_name.$touch"
-                        ></v-text-field>
-                      </v-col>
-                      <v-col cols="12" sm="6" md="6">
-                        <v-select
-                          v-model="state.category"
-                          :items="categoryList"
-                          label="種類"
-                        ></v-select>
-                      </v-col>
-                      <v-col cols="12" sm="6" md="6">
-                        <v-text-field
-                          v-model="state.brand"
-                          label="品牌"
-                          :error-messages="v$.brand.$errors.map((e: any) => e.$message)"
-                          @input="v$.brand.$touch"
-                          @blur="v$.brand.$touch"
-                        ></v-text-field>
-                      </v-col>
-                      <v-col cols="12">
-                        <v-text-field
-                          v-model="state.price"
-                          label="價格"
-                          :error-messages="v$.price.$errors.map((e: any) => e.$message)"
-                          @input="v$.price.$touch"
-                          @blur="v$.price.$touch"
-                        ></v-text-field>
-                      </v-col>
-                      <v-col cols="12">
-                        <v-text-field
-                          v-model="state.stock"
-                          label="庫存"
-                          :error-messages="v$.stock.$errors.map((e: any) => e.$message)"
-                          @input="v$.stock.$touch"
-                          @blur="v$.stock.$touch"
-                        ></v-text-field>
-                      </v-col>
-                    </v-row>
-                  </v-container>
-                </v-card-text>
-                <v-card-actions>
-                  <v-row class="justify-end mx-3">
-                    <v-btn
-                      color="blue-darken-1"
-                      variant="tonal"
-                      @click="updateProduct()"
-                    >
-                      儲存
-                    </v-btn>
-                    <v-btn
-                      color="blue-darken"
-                      variant="tonal"
-                      @click="dialog = false"
-                    >
-                      關閉
-                    </v-btn>
-                  </v-row>
-                </v-card-actions>
-              </v-card>
-            </v-dialog>
           </td>
           <td>
-            <v-icon
-              icon="fa:fas fa-trash"
-              @click="deleteProduct(product.product_id)"
-            ></v-icon>
+            <v-icon icon="fa:fas fa-trash" @click="openAlert(product)"></v-icon>
           </td>
         </tr>
       </tbody>
     </v-table>
   </v-container>
+
+  <v-dialog v-model="dialog" persistent width="1024">
+    <v-card>
+      <v-card-title class="mx-3 mt-3 text-h5">編輯商品</v-card-title>
+      <v-card-text>
+        <v-row>
+          <v-col cols="12">
+            <v-text-field
+              v-model="state.product_name"
+              label="商品名稱"
+              :error-messages="v$.product_name.$errors.map((e: any) => e.$message)"
+              @input="v$.product_name.$touch"
+              @blur="v$.product_name.$touch"
+            ></v-text-field>
+          </v-col>
+          <v-col cols="12" sm="6" md="6">
+            <v-select
+              v-model="state.category"
+              :items="categoryList"
+              label="種類"
+            ></v-select>
+          </v-col>
+          <v-col cols="12" sm="6" md="6">
+            <v-text-field
+              v-model="state.brand"
+              label="品牌"
+              :error-messages="v$.brand.$errors.map((e: any) => e.$message)"
+              @input="v$.brand.$touch"
+              @blur="v$.brand.$touch"
+            ></v-text-field>
+          </v-col>
+          <v-col cols="12">
+            <v-text-field
+              v-model="state.price"
+              label="價格"
+              :error-messages="v$.price.$errors.map((e: any) => e.$message)"
+              @input="v$.price.$touch"
+              @blur="v$.price.$touch"
+            ></v-text-field>
+          </v-col>
+          <v-col cols="12">
+            <v-text-field
+              v-model="state.stock"
+              label="庫存"
+              :error-messages="v$.stock.$errors.map((e: any) => e.$message)"
+              @input="v$.stock.$touch"
+              @blur="v$.stock.$touch"
+            ></v-text-field>
+          </v-col>
+        </v-row>
+      </v-card-text>
+      <v-card-actions class="justify-end ma-3">
+        <v-btn color="blue-darken-1" variant="tonal" @click="updateProduct()">
+          儲存
+        </v-btn>
+        <v-btn color="blue-darken" variant="tonal" @click="dialog = false">
+          關閉
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+
+  <v-dialog v-model="alertDialog" max-width="500">
+    <v-card>
+      <v-card-title> 提示訊息 </v-card-title>
+      <v-card-text>
+        {{ message }}
+      </v-card-text>
+      <v-card-actions class="justify-end">
+        <v-btn color="blue" variant="tonal" @click="deleteProduct()"
+          >確定</v-btn
+        >
+        <v-btn class="mx-3" variant="tonal" @click="alertDialog = false"
+          >關閉</v-btn
+        >
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+
   <v-container v-if="!marketId">
     <CreateMarket></CreateMarket>
   </v-container>
@@ -186,6 +190,8 @@ export default defineComponent({
       selectedProductId: 0,
       marketId: null,
       marketName: "",
+      alertDialog: false,
+      message: "",
     };
   },
 
@@ -264,9 +270,17 @@ export default defineComponent({
       this.router.push({ name: "CreateProduct" });
     },
 
-    deleteProduct(productId: number) {
-      ProductDataService.delete(productId)
+    openAlert(product: Product) {
+      this.selectedProductId = product.product_id;
+      this.message = `確定要刪除"${product.product_name}"嗎?`;
+      this.alertDialog = true;
+    },
+
+    deleteProduct() {
+      ProductDataService.delete(this.selectedProductId)
         .then((response: any) => {
+          this.message = "";
+          this.alertDialog = false;
           this.getProducts();
         })
         .catch((e) => {

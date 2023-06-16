@@ -46,11 +46,10 @@
           @blur="v$.stock.$touch"
         ></v-text-field>
         <v-card-actions class="justify-end">
-          <v-btn class="ma-3"
-            variant="tonal"
-            color="blue-lighten-1" 
-            @click="saveProduct">新增商品
+          <v-btn variant="tonal" color="blue-lighten-1" @click="saveProduct"
+            >新增商品
           </v-btn>
+          <v-btn variant="tonal" @click="back()">取消 </v-btn>
         </v-card-actions>
       </v-form>
     </v-card>
@@ -129,6 +128,10 @@ export default defineComponent({
           });
         }
       }
+    },
+
+    back() {
+      this.router.push("/manage/product");
     },
   },
 });

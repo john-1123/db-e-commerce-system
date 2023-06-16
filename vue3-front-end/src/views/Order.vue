@@ -22,12 +22,13 @@
             <v-icon icon="fa:fas fa-edit" @click="detail(order)"></v-icon>
           </td>
           <td>
-            <v-icon icon="fa:fas fa-trash" @click="deleteOrder(order)"></v-icon>
+            <v-icon icon="fa:fas fa-trash" @click="openAlert(order)"></v-icon>
           </td>
         </tr>
       </tbody>
     </v-table>
   </v-container>
+
   <v-container>
     <v-dialog v-model="dialog" max-width="500">
       <v-card>
@@ -61,6 +62,21 @@
       </v-card>
     </v-dialog>
   </v-container>
+
+  <v-dialog v-model="alertDialog" max-width="500">
+    <v-card>
+      <v-card-title> 提示訊息 </v-card-title>
+      <v-card-text>
+        {{ message }}
+      </v-card-text>
+      <v-card-actions class="justify-end">
+        <v-btn color="blue" variant="tonal" @click="deleteOrder()">確定</v-btn>
+        <v-btn class="mx-3" variant="tonal" @click="alertDialog = false"
+          >關閉</v-btn
+        >
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script lang="ts">
@@ -76,6 +92,8 @@ export default defineComponent({
       orderList: [] as Order[],
       selectedOrder: {} as Order,
       dialog: false,
+      alertDialog: false,
+      message: "",
     };
   },
 
@@ -99,16 +117,23 @@ export default defineComponent({
     },
 
     detail(order: Order) {
-      console.log(order);
       this.selectedOrder = order;
       this.dialog = true;
     },
 
-    deleteOrder(order: Order) {
-      if (order.state == OrderState.待確認) {
-        OrderDataService.delete(order.order_id)
+    openAlert(order: Order) {
+      this.selectedOrder = order;
+      this.message = `確定要刪除"訂單編號 : ${this.selectedOrder.order_id}"嗎 ?`;
+      this.alertDialog = true;
+    },
+
+    deleteOrder() {
+      if (this.selectedOrder.state == OrderState.待確認) {
+        OrderDataService.delete(this.selectedOrder.order_id)
           .then((response: any) => {
             console.log(response.data);
+            this.alertDialog = false;
+            this.message = "";
             this.getOrders();
           })
           .catch((e: Error) => {
