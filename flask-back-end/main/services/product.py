@@ -2,6 +2,7 @@ from flask import jsonify
 from main.models._db import delete, save
 from main.models.product import Product
 from main.schemas.product import ProductSchema
+from main.models.cart_item import CartItem
 
 class ProductService:
     def __init__(self):
@@ -51,5 +52,8 @@ class ProductService:
     def delete(self, product_id):
         product = Product.query.get(product_id)
         if product:
+            cart_list = CartItem.query.filter_by(product_id = product_id).all()
+            for cart in cart_list:
+                delete(cart)
             delete(product)
             return product_id
