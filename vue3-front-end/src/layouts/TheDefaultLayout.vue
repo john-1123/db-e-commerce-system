@@ -47,7 +47,9 @@ export default defineComponent({
       <v-btn to="/manage/order" v-if="authStore.state.isLogin" class="ml-auto"
         >Manage Order</v-btn
       >
-      <v-btn v-if="authStore.state.isLogin" @click="Logout" class="ml-auto">Logout</v-btn>
+      <v-btn v-if="authStore.state.isLogin" @click="Logout" class="ml-auto"
+        >Logout</v-btn
+      >
     </v-app-bar>
     <v-main>
       <slot></slot>

@@ -1,5 +1,9 @@
 from main.models._db import save, delete
 from flask import jsonify
+from main.models.cart_item import CartItem
+from main.models.order_table import Order_Table
+from main.models.product import Product
+from main.models.market import Market
 from main.models.user import User
 from main.schemas.user import UserSchema
 import datetime
@@ -45,5 +49,23 @@ class UserService:
     def delete(self, user_id):
         user = User.query.get(user_id)
         if user:
+            cart_list = CartItem.query.filter_by(member_id = user_id).all()
+            for cart in cart_list:
+                delete(cart)
+
+            order_list = Order_Table.query.filter_by(member_id = user_id).all()
+            for order in order_list:
+                delete(order)
+
+            market = Market.query.filter_by(user_id = user_id).first()
+            if market:
+                product_list = Product.query.filter_by(market_id = market.market_id).all()
+                for product in product_list:
+                    delete(product)
+                order_list = Order_Table.query.filter_by(market_id = market.market_id).all()
+                for order in order_list:
+                    delete(order)
+                delete(market)
             delete(user)
             return user_id
+            

@@ -46,7 +46,8 @@
           @input="v$.phone.$touch"
           @blur="v$.phone.$touch"
         ></v-text-field>
-        <v-btn color="blue" @click="submitForm">Update</v-btn>
+        <v-btn class="mx-3" color="blue" @click="submitForm">Update</v-btn>
+        <v-btn class="mx-3" color="red" @click="openAlert()">註銷帳號</v-btn>
       </v-form>
     </v-card>
 
@@ -63,6 +64,21 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+    <v-dialog v-model="alertDialog" max-width="500">
+      <v-card>
+        <v-card-title> 提示訊息 </v-card-title>
+        <v-card-text>
+          {{ message }}
+        </v-card-text>
+        <v-card-actions class="justify-end">
+          <v-btn color="blue" variant="tonal" @click="deleteAccount"
+            >確定</v-btn
+          >
+          <v-btn class="mx-3" variant="tonal" @click="close">關閉</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -72,10 +88,16 @@ import { email, maxLength, minLength, required } from "@vuelidate/validators";
 import { computed, defineComponent, reactive } from "vue";
 import UpdateUser from "../models/user/update-user";
 import UserDataService from "../services/UserDataService";
+import { useRouter } from "vue-router";
+import { useStore } from "vuex";
 
 export default defineComponent({
   name: "Profile",
   setup() {
+    const authStore = useStore();
+
+    const router = useRouter();
+
     const state = reactive({
       username: "",
       email: "",
@@ -102,22 +124,27 @@ export default defineComponent({
 
     const user_id = Number(sessionStorage.getItem("user"));
     if (user_id) {
-      UserDataService.get(user_id).then((response: any) => {
-        state.username = response["data"]["username"];
-        state.email = response["data"]["email"];
-        state.password = response["data"]["password"];
-        state.address = response["data"]["address"];
-        state.phone = response["data"]["phone"];
-      });
+      UserDataService.get(user_id)
+        .then((response: any) => {
+          state.username = response["data"]["username"];
+          state.email = response["data"]["email"];
+          state.password = response["data"]["password"];
+          state.address = response["data"]["address"];
+          state.phone = response["data"]["phone"];
+        })
+        .catch((e: Error) => {
+          console.log(e);
+        });
     }
 
-    return { user_id, state, v$ };
+    return { authStore, router, user_id, state, v$ };
   },
   data() {
     return {
       passwordShow: false,
       dialog: false,
       message: "",
+      alertDialog: false,
     };
   },
   methods: {
@@ -145,6 +172,26 @@ export default defineComponent({
     close() {
       this.message = "";
       this.dialog = false;
+      this.alertDialog = false;
+    },
+
+    openAlert() {
+      this.message = "確定要註銷帳號嗎?";
+      this.alertDialog = true;
+    },
+
+    deleteAccount() {
+      const user_id = Number(sessionStorage.getItem("user"));
+      if (user_id) {
+        UserDataService.delete(user_id)
+          .then((response: any) => {
+            this.authStore.commit("logout");
+            this.router.push("/sign-up");
+          })
+          .catch((e: Error) => {
+            console.log(e);
+          });
+      }
     },
   },
 });
