@@ -76,7 +76,13 @@
         {{ message }}
       </v-card-text>
       <v-card-actions class="justify-end">
-        <v-btn color="blue" variant="tonal" @click="deleteOrder()">確定</v-btn>
+        <v-btn
+          color="blue"
+          variant="tonal"
+          :disabled="!canDeleted"
+          @click="deleteOrder()"
+          >確定</v-btn
+        >
         <v-btn class="mx-3" variant="tonal" @click="alertDialog = false"
           >關閉</v-btn
         >
@@ -101,6 +107,7 @@ export default defineComponent({
       alertDialog: false,
       message: "",
       isDisabled: false,
+      canDeleted: true,
     };
   },
 
@@ -124,19 +131,19 @@ export default defineComponent({
 
     detail(order: Order) {
       this.selectedOrder = order;
-      console.log(this.selectedOrder.state == OrderState.配送中);
       this.isDisabled = this.selectedOrder.state != OrderState.配送中;
       this.dialog = true;
     },
 
     openAlert(order: Order) {
       this.selectedOrder = order;
+      this.canDeleted = this.selectedOrder.state != OrderState.配送中;
       this.message = `確定要刪除"訂單編號 : ${this.selectedOrder.order_id}"嗎 ?`;
       this.alertDialog = true;
     },
 
     deleteOrder() {
-      if (this.selectedOrder.state == OrderState.待確認) {
+      if (this.selectedOrder.state != OrderState.配送中) {
         OrderDataService.delete(this.selectedOrder.order_id)
           .then((response: any) => {
             this.alertDialog = false;
