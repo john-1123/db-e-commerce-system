@@ -26,6 +26,20 @@
       </v-form>
     </v-card>
   </v-container>
+
+  <v-dialog v-model="alertDialog" max-width="500">
+    <v-card>
+      <v-card-title> 提示訊息 </v-card-title>
+      <v-card-text>
+        {{ message }}
+      </v-card-text>
+      <v-card-actions class="justify-end">
+        <v-btn class="mx-3" variant="tonal" @click="alertDialog = false"
+          >關閉</v-btn
+        >
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 <script lang="ts">
 import useValidate from "@vuelidate/core";
@@ -61,6 +75,8 @@ export default defineComponent({
   data() {
     return {
       passwordShow: false,
+      alertDialog: false,
+      message: "",
     };
   },
   methods: {
@@ -78,6 +94,8 @@ export default defineComponent({
             this.router.push("/home");
           })
           .catch((e: Error) => {
+            this.message = "請確認帳號密碼輸入正確!";
+            this.alertDialog = true;
             console.log(e);
           });
       }
