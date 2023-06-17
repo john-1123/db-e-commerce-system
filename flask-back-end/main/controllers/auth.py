@@ -16,4 +16,7 @@ class AuthLogin(Resource):
     
 class AuthSignUp(Resource):
     def post(self):
-        return auth_service.signup(data=request.json)
+        user = auth_service.signup(data=request.json)
+        if not user:
+            flask_restful.abort(401)
+        return user

@@ -28,3 +28,5 @@ class AuthService:
             )
             save(new_user)
             return self.user_schema.jsonify(new_user)
+        else:
+            return None
