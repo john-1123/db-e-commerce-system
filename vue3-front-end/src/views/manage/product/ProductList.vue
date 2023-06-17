@@ -3,7 +3,17 @@
     <v-row justify="space-between">
       <v-col cols="auto">
         <v-card-title> [Management] 賣家管理商品 </v-card-title>
-        <v-card-subtitle>Market Name : {{ marketName }}</v-card-subtitle>
+        <v-card-subtitle>創建於 : {{ market.registered_on }}</v-card-subtitle>
+        <v-card-text>
+          Market Name : {{ market.market_name }}
+          <v-btn
+            class="mx-3"
+            variant="tonal"
+            size="small"
+            @click="marketDialog = true"
+            >修改名稱</v-btn
+          >
+        </v-card-text>
       </v-col>
       <v-col cols="auto">
         <v-btn color="orange-lighten-4" @click="createProduct">
@@ -114,6 +124,26 @@
     </v-card>
   </v-dialog>
 
+  <v-dialog v-model="marketDialog" persistent width="500">
+    <v-card elevation="2" tile max-width="500">
+      <v-card-title>修改市場名稱</v-card-title>
+      <v-card-text>
+        <v-form class="ma-3">
+          <v-text-field
+            class="ma-3"
+            v-model="market.market_name"
+            label="市場名稱"
+          ></v-text-field>
+        </v-form>
+      </v-card-text>
+      <v-card-actions class="justify-end">
+        <v-btn color="blue-lighten-1" variant="tonal" @click="updateMarket"
+          >更新</v-btn
+        ><v-btn class="mx-3" @click="marketDialog = false">取消</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+
   <v-dialog v-model="alertDialog" max-width="500">
     <v-card>
       <v-card-title> 提示訊息 </v-card-title>
@@ -147,6 +177,8 @@ import MarketDataService from "../../../services/MarketDataService";
 import ProductDataService from "../../../services/ProductDataService";
 import CreateMarket from "./CreateMarket.vue";
 import { PrdouctCategory } from "../../../models/product/product-category";
+import { Market } from "../../../models/market/market";
+import { UpdateMarket } from "../../../models/market/update-market";
 
 export default defineComponent({
   name: "ManageProduct",
@@ -189,9 +221,10 @@ export default defineComponent({
       productList: [] as Product[],
       selectedProductId: 0,
       marketId: null,
-      marketName: "",
+      market: {} as Market,
       alertDialog: false,
       message: "",
+      marketDialog: false,
     };
   },
 
@@ -202,7 +235,7 @@ export default defineComponent({
         MarketDataService.getMarketByUser(userId)
           .then((response: any) => {
             const marketId = response.data.market_id;
-            this.marketName = response.data.market_name;
+            this.market = response.data;
             if (marketId) {
               this.marketId = marketId;
               ProductDataService.getProductByMarket(marketId)
@@ -284,6 +317,20 @@ export default defineComponent({
           this.getProducts();
         })
         .catch((e) => {
+          console.log(e);
+        });
+    },
+
+    updateMarket() {
+      const updatedMarket: UpdateMarket = {
+        market_name: this.market.market_name,
+      };
+      MarketDataService.update(this.market.market_id, updatedMarket)
+        .then((response: any) => {
+          this.market = response.data;
+          this.marketDialog = false;
+        })
+        .catch((e: Error) => {
           console.log(e);
         });
     },
