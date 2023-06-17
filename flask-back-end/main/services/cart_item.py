@@ -1,5 +1,6 @@
 from main.models._db import delete, save
 from main.models.cart_item import CartItem
+from main.models.product import Product
 from main.schemas.cart_item import CartItemSchema
 
 
@@ -33,6 +34,8 @@ class CartItemService:
             return self.cart_schema.jsonify(cart)
         else:
             cart.quantity += int(data['quantity'])
+            product = Product.query.get(data['product_id'])
+            cart.quantity = product.stock if cart.quantity > product.stock else cart.quantity
             save(cart)
             return self.cart_schema.jsonify(cart)
 
