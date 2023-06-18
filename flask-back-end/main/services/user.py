@@ -61,6 +61,9 @@ class UserService:
             if market:
                 product_list = Product.query.filter_by(market_id = market.market_id).all()
                 for product in product_list:
+                    cart_list = CartItem.query.filter_by(product_id = product.product_id).all()
+                    for cart in cart_list:
+                        delete(cart)
                     delete(product)
                 order_list = Order_Table.query.filter_by(market_id = market.market_id).all()
                 for order in order_list:
