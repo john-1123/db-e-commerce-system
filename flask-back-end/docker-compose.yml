@@ -1,11 +1,14 @@
 version: "3"
 services:
   db:
-    image: mysql:8.0.28-oracle
+    image: mysql:8.0.32
     restart: always
     environment:
       MYSQL_ROOT_USER: root
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: ecommerce
+      MYSQL_OPTS: "--net_read_timeout=3600 --net_write_timeout=3600"
     ports:
       - 3306:3306
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
