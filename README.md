@@ -101,6 +101,13 @@ db-e-commerce-system for 2023 NCCU DBMS
 
 ![](./images/er-model.png)
 
-# Relational Schema
+# Relational Schema v1
 
 ![](./images/relational-schema.jpg)
+
+# Relational Schema v2
+
+![](./images/relational-schema.png)
+
+# Relational Schema v3
+![](./images/schema_updated.png)
